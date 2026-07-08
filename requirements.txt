@@ -1,0 +1,26 @@
+# World Foresight Framework - Python Dependencies
+# Python >= 3.10
+#
+# Quick setup:
+#   python -m venv venv
+#   source venv/bin/activate        # Windows: venv\Scripts\activate
+#   pip install -r requirements.txt
+#   python -m ipykernel install --user --name=wff --display-name="World Foresight Framework"
+#
+# Then open any notebook and select kernel: "World Foresight Framework"
+
+# Core data
+pandas>=2.1.0
+numpy>=1.26.0
+openpyxl>=3.1.0
+xlrd>=2.0.1
+
+# Visualization
+matplotlib>=3.8.0
+
+# Notebook environment
+jupyter>=1.0.0
+ipykernel>=6.0.0
+
+# Utilities
+requests>=2.31.0
