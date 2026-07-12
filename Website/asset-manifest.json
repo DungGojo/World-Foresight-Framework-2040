@@ -1,0 +1,299 @@
+{
+  "note": "All media used by the site, with source + license. Generated together with content.js.",
+  "earthTextures": {
+    "comment": "Photoreal Earth for the intro. Live URLs are CORS-enabled CDNs (required for WebGL). localPath is written by download-assets.sh; the site prefers local files when served over http(s) and falls back to the live URL, then to a procedural canvas Earth — the globe is never blank.",
+    "day": {
+      "url": "https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg",
+      "localPath": "assets/earth/earth_day.jpg",
+      "note": "4K NASA Blue Marble"
+    },
+    "night": {
+      "url": "https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-night.jpg",
+      "localPath": "assets/earth/earth_night.jpg",
+      "note": "4K city lights, blended on the night side"
+    },
+    "clouds": {
+      "url": "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/textures/planets/earth_clouds_2048.png",
+      "localPath": "assets/earth/earth_clouds.png",
+      "note": "transparent cloud layer"
+    },
+    "water": {
+      "url": "https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-water.png",
+      "localPath": "assets/earth/earth_water.png",
+      "note": "ocean mask → sun glint"
+    },
+    "topology": {
+      "url": "https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-topology.png",
+      "localPath": "assets/earth/earth_topology.png",
+      "note": "terrain relief (bump)"
+    },
+    "sky": {
+      "url": "https://cdn.jsdelivr.net/npm/three-globe/example/img/night-sky.png",
+      "localPath": "assets/earth/night_sky.png",
+      "note": "Milky-Way starfield backdrop"
+    }
+  },
+  "montage": [
+    {
+      "n": 1,
+      "localImg": "assets/montage/01-hadean.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Hadean.png?width=1920",
+      "title": "A world ignites",
+      "credit": "Tim Bertelink",
+      "license": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Hadean.png"
+    },
+    {
+      "n": 2,
+      "localImg": "assets/montage/02-stromatolites.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Stromatolites_in_Sharkbay.jpg?width=1920",
+      "title": "Life begins",
+      "credit": "Paul Harrison",
+      "license": "CC BY-SA 3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Stromatolites_in_Sharkbay.jpg"
+    },
+    {
+      "n": 3,
+      "localImg": "assets/montage/03-chicxulub.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Chicxulub_impact_-_artist_impression.jpg?width=1920",
+      "title": "The great reset",
+      "credit": "Donald E. Davis / NASA",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Chicxulub_impact_-_artist_impression.jpg"
+    },
+    {
+      "n": 4,
+      "localImg": "assets/montage/04-lascaux.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Lascaux_painting.jpg?width=1920",
+      "title": "We arrive",
+      "credit": "Lascaux cave art, France",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Lascaux_painting.jpg"
+    },
+    {
+      "n": 5,
+      "localImg": "assets/montage/05-egypt-harvest.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Egyptian_harvest.jpg?width=1920",
+      "title": "We settle",
+      "credit": "Ancient Egyptian tomb painting",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Egyptian_harvest.jpg"
+    },
+    {
+      "n": 6,
+      "localImg": "assets/montage/06-ziggurat-ur.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Ziggurat_of_Ur.jpg?width=1920",
+      "title": "We record",
+      "credit": "Kaufingdude (Wikimedia)",
+      "license": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Ziggurat_of_Ur.jpg"
+    },
+    {
+      "n": 7,
+      "localImg": "assets/montage/07-colosseum.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Colosseo_2020.jpg?width=1920",
+      "title": "Empires rise",
+      "credit": "FeaturedPics (Wikimedia)",
+      "license": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Colosseo_2020.jpg"
+    },
+    {
+      "n": 8,
+      "localImg": "assets/montage/08-qingming.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Bianjing_city_gate.JPG?width=1920",
+      "title": "One world, many markets",
+      "credit": "Zhang Zeduan, 'Along the River During Qingming' (12th c., detail)",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Bianjing_city_gate.JPG"
+    },
+    {
+      "n": 9,
+      "localImg": "assets/montage/09-gutenberg.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Gutenberg_Bible_scan.jpg?width=1920",
+      "title": "Knowledge breaks free",
+      "credit": "Gutenberg Bible (c. 1455)",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Gutenberg_Bible_scan.jpg"
+    },
+    {
+      "n": 10,
+      "localImg": "assets/montage/10-cantino.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Cantino_planisphere_%281502%29.jpg?width=1920",
+      "title": "Worlds collide",
+      "credit": "Cantino planisphere (1502)",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Cantino_planisphere_(1502).jpg"
+    },
+    {
+      "n": 11,
+      "localImg": "assets/montage/11-principia.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Prinicipia-title.png?width=1920",
+      "title": "Science rewrites the rules",
+      "credit": "Isaac Newton, 'Principia' (1687)",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Prinicipia-title.png"
+    },
+    {
+      "n": 12,
+      "localImg": "assets/montage/12-coalbrookdale.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Philipp_Jakob_Loutherbourg_d._J._-_Coalbrookdale_by_Night_-_WGA13730.jpg?width=1920",
+      "title": "The engine age",
+      "credit": "P. J. de Loutherbourg, 'Coalbrookdale by Night' (1801)",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Philipp_Jakob_Loutherbourg_d._J._-_Coalbrookdale_by_Night_-_WGA13730.jpg"
+    },
+    {
+      "n": 13,
+      "localImg": "assets/montage/13-golden-spike.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/East_and_West_Shaking_hands_at_the_laying_of_last_rail_Union_Pacific_Railroad_-_Restoration.jpg?width=1920",
+      "title": "Distance dies",
+      "credit": "A. J. Russell (1869)",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:East_and_West_Shaking_hands_at_the_laying_of_last_rail_Union_Pacific_Railroad_-_Restoration.jpg"
+    },
+    {
+      "n": 14,
+      "localImg": "assets/montage/14-ww1-trench.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Cheshire_Regiment_trench_Somme_1916.jpg?width=1920",
+      "title": "The world at war",
+      "credit": "John Warwick Brooke (1916)",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Cheshire_Regiment_trench_Somme_1916.jpg"
+    },
+    {
+      "n": 15,
+      "localImg": "assets/montage/15-migrant-mother.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Lange-MigrantMother02.jpg?width=1920",
+      "title": "The economy breaks",
+      "credit": "Dorothea Lange, 'Migrant Mother' (1936)",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Lange-MigrantMother02.jpg"
+    },
+    {
+      "n": 16,
+      "localImg": "assets/montage/16-dday.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Into_the_Jaws_of_Death_23-0455M_edit.jpg?width=1920",
+      "title": "Total war",
+      "credit": "Robert F. Sargent, U.S. Coast Guard (1944)",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Into_the_Jaws_of_Death_23-0455M_edit.jpg"
+    },
+    {
+      "n": 17,
+      "localImg": "assets/montage/17-trinity.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Trinity_Test_Fireball_25ms.jpg?width=1920",
+      "title": "The atomic age",
+      "credit": "U.S. Government (Trinity test)",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Trinity_Test_Fireball_25ms.jpg"
+    },
+    {
+      "n": 18,
+      "localImg": "assets/montage/18-human-tide.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Shibuya_Crossing_%2853333799585%29.jpg?width=1920",
+      "title": "The human tide",
+      "credit": "Dick Thomas Johnson",
+      "license": "CC BY 2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Shibuya_Crossing_(53333799585).jpg"
+    },
+    {
+      "n": 19,
+      "localImg": "assets/montage/19-earthrise.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/NASA-Apollo8-Dec24-Earthrise.jpg?width=1920",
+      "title": "We leave Earth",
+      "credit": "William Anders / NASA (Apollo 8)",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:NASA-Apollo8-Dec24-Earthrise.jpg"
+    },
+    {
+      "n": 20,
+      "localImg": "assets/montage/20-smog.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/THE_GEORGE_WASHINGTON_BRIDGE_IN_HEAVY_SMOG._VIEW_TOWARD_THE_NEW_JERSEY_SIDE_OF_THE_HUDSON_RIVER_-_NARA_-_548335.jpg?width=1920",
+      "title": "The planet pushes back",
+      "credit": "Chester Higgins Jr., EPA Documerica (1973)",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:THE_GEORGE_WASHINGTON_BRIDGE_IN_HEAVY_SMOG._VIEW_TOWARD_THE_NEW_JERSEY_SIDE_OF_THE_HUDSON_RIVER_-_NARA_-_548335.jpg"
+    },
+    {
+      "n": 21,
+      "localImg": "assets/montage/21-berlin-wall.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Thefalloftheberlinwall1989.JPG?width=1920",
+      "title": "Walls come down",
+      "credit": "Lear 21 (Wikimedia)",
+      "license": "CC BY-SA 3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Thefalloftheberlinwall1989.JPG"
+    },
+    {
+      "n": 22,
+      "localImg": "assets/montage/22-containers.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Line3174_-_Shipping_Containers_at_the_terminal_at_Port_Elizabeth%2C_New_Jersey_-_NOAA.jpg?width=1920",
+      "title": "One world market",
+      "credit": "NOAA",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Line3174_-_Shipping_Containers_at_the_terminal_at_Port_Elizabeth,_New_Jersey_-_NOAA.jpg"
+    },
+    {
+      "n": 23,
+      "localImg": "assets/montage/23-city-lights.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Earth%27s_City_Lights_by_DMSP%2C_1994-1995_%28large%29.jpg?width=1920",
+      "title": "Everyone, connected",
+      "credit": "NASA / DMSP",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Earth's_City_Lights_by_DMSP,_1994-1995_(large).jpg"
+    },
+    {
+      "n": 24,
+      "localImg": "assets/montage/24-lehman.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Lehman_Brothers_Times_Square_by_David_Shankbone.jpg?width=1920",
+      "title": "The system trembles",
+      "credit": "David Shankbone",
+      "license": "CC BY-SA 3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Lehman_Brothers_Times_Square_by_David_Shankbone.jpg"
+    },
+    {
+      "n": 25,
+      "localImg": "assets/montage/25-pandemic.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Times_Square_Pandemic_Lockdown_Dec._31%2C_2020.jpg?width=1920",
+      "title": "A shared shock",
+      "credit": "Natalie Wynne Pace",
+      "license": "CC BY 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Times_Square_Pandemic_Lockdown_Dec._31,_2020.jpg"
+    },
+    {
+      "n": 26,
+      "localImg": "assets/montage/26-ai-datacenter.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/BalticServers_data_center.jpg?width=1920",
+      "title": "Machines that think",
+      "credit": "Fleshas / BalticServers",
+      "license": "CC BY-SA 3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:BalticServers_data_center.jpg"
+    },
+    {
+      "n": 27,
+      "localImg": "assets/montage/27-orange-sky.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Kite_Hill_under_a_sky_orange_with_wildfire_smoke%2C_San_Francisco%2C_California%2C_USA.jpg?width=1920",
+      "title": "The hottest years on record",
+      "credit": "Semiautonomous (Wikimedia)",
+      "license": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Kite_Hill_under_a_sky_orange_with_wildfire_smoke,_San_Francisco,_California,_USA.jpg"
+    },
+    {
+      "n": 28,
+      "localImg": "assets/montage/28-iss-aurora.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/An_aurora_blankets_the_Earth_beneath_a_celestial_night_sky_as_the_International_Space_Station_orbited_261_miles_above_the_Atlantic_Ocean_off_the_coast_of_North_America.jpg?width=1920",
+      "title": "Now — five forces in motion",
+      "credit": "NASA / ISS",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:An_aurora_blankets_the_Earth_beneath_a_celestial_night_sky_as_the_International_Space_Station_orbited_261_miles_above_the_Atlantic_Ocean_off_the_coast_of_North_America.jpg"
+    },
+    {
+      "n": 29,
+      "localImg": "assets/montage/29-blue-marble.jpg",
+      "img": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Earth_seen_from_Apollo_17.jpg?width=1920",
+      "title": "What will the world look like in 2040?",
+      "credit": "NASA (Apollo 17, 'Blue Marble')",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:The_Earth_seen_from_Apollo_17.jpg"
+    }
+  ]
+}
