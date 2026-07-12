@@ -40,24 +40,24 @@ def extract_transform(raw_file_path: str, start_year: int = 2010, end_year: int 
         df.groupby(["isocode3", "year"])["personnel"]
         .sum()
         .reset_index()
-        .rename(columns={"isocode3": "market", "year": "date", "personnel": "value"})
+        .rename(columns={"isocode3": "market", "personnel": "value"})
     )
 
     # ── 3. Zero-fill missing country-year combos ──────────────────────────────
     full_index = pd.MultiIndex.from_product(
         [MARKETS_35, list(range(start_year, end_year + 1))],
-        names=["market", "date"]
+        names=["market", "year"]
     )
-    existing = pd.MultiIndex.from_frame(annual[["market", "date"]])
+    existing = pd.MultiIndex.from_frame(annual[["market", "year"]])
     gaps = full_index.difference(existing)
     if len(gaps) > 0:
-        gap_df = pd.DataFrame(list(gaps), columns=["market", "date"])
+        gap_df = pd.DataFrame(list(gaps), columns=["market", "year"])
         gap_df["value"] = 0.0
         annual = pd.concat([annual, gap_df], ignore_index=True)
 
     # ── 4. GLO row = sum across all 35 countries per year ─────────────────────
     glo = (
-        annual.groupby("date")["value"]
+        annual.groupby("year")["value"]
         .sum()
         .reset_index()
     )
@@ -71,6 +71,6 @@ def extract_transform(raw_file_path: str, start_year: int = 2010, end_year: int 
     annual["labels"]   = "No. of people"
     annual["metric"]   = None
 
-    result = annual[["proxy_id", "market", "date", "value", "labels", "metric"]]
-    result = result.sort_values(["market", "date"]).reset_index(drop=True)
+    result = annual[["proxy_id", "market", "year", "value", "labels", "metric"]]
+    result = result.sort_values(["market", "year"]).reset_index(drop=True)
     return result

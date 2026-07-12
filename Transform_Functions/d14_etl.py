@@ -51,7 +51,7 @@ def extract_transform(raw_file_path: str, ideal_points_path: str,
         .groupby(["iso3c", "year"])["agree"]
         .mean()
         .reset_index()
-        .rename(columns={"iso3c": "market", "year": "date"})
+        .rename(columns={"iso3c": "market"})
     )
     annual["value"] = (annual["agree"] * 100).round(6)
 
@@ -60,6 +60,6 @@ def extract_transform(raw_file_path: str, ideal_points_path: str,
     annual["labels"]   = "%"
     annual["metric"]   = None
 
-    result = annual[["proxy_id", "market", "date", "value", "labels", "metric"]]
-    result = result.sort_values(["market", "date"]).reset_index(drop=True)
+    result = annual[["proxy_id", "market", "year", "value", "labels", "metric"]]
+    result = result.sort_values(["market", "year"]).reset_index(drop=True)
     return result

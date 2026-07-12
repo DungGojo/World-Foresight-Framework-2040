@@ -6,7 +6,7 @@ Sources (best available that are server-rendered / scrapeable):
   * NPT      -> Wikipedia "List of parties to the Treaty on the Non-Proliferation
                 of Nuclear Weapons". Columns: State | Signed | Deposited | Method.
                 The 'Deposited' cell carries up to 3 dates (London/Moscow/Washington
-                depositaries); we take the EARLIEST as the date the state became a
+                depositaries); we take the EARLIEST as the year the state became a
                 party. FULL dates (YYYY-MM-DD).
   * AP-I     -> Wikipedia "List of parties to the Geneva Conventions". The Additional
                 Protocol I column gives the YEAR of ratification/accession only
@@ -27,7 +27,7 @@ import csv
 import requests
 from bs4 import BeautifulSoup
 
-# This script lives in Code/Transform_Functions/; CSVs go to <repo>/Raw Data/UN_Treaties/.
+# This script lives in Data Preparation/Extract_Functions/; CSVs go to <repo>/Raw Data/UN_Treaties/.
 _REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 OUT_DIR = os.path.join(_REPO_ROOT, "Raw Data", "UN_Treaties")
 os.makedirs(OUT_DIR, exist_ok=True)

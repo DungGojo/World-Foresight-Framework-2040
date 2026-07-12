@@ -33,7 +33,7 @@ Design notes
   so their names and signatures are kept stable.
 
 Output schema of `extract_transform`:
-    [proxy_id, market, date, value, labels, metric]
+    [proxy_id, market, year, value, labels, metric]
 (The notebook's loader derives the `id` column from `proxy_id`.)
 """
 
@@ -53,7 +53,7 @@ MARKETS = [
     "ZAF", "ETH", "KEN", "COD", "KAZ",
 ]
 
-OUTPUT_COLUMNS = ["proxy_id", "market", "date", "value", "labels", "metric"]
+OUTPUT_COLUMNS = ["proxy_id", "market", "year", "value", "labels", "metric"]
 
 # --- Data360 API config ----------------------------------------------------
 DATA360_URL = "https://data360api.worldbank.org/data360/data"
@@ -128,7 +128,7 @@ def _fetch(indicator: str, start_year: int, end_year: int, markets: list,
            database: str = DEFAULT_DATABASE) -> pd.DataFrame:
     """Fetch one (classic WDI) indicator for the given markets/years via Data360.
 
-    Returns df with columns [market, date, <indicator>]; empty df if no data.
+    Returns df with columns [market, year, <indicator>]; empty df if no data.
     """
     indicator_id = to_data360_id(indicator, database)
     records = []
@@ -158,15 +158,15 @@ def _fetch(indicator: str, start_year: int, end_year: int, markets: list,
                 value = float(raw) * (10 ** int(x.get("UNIT_MULT") or 0))
             except (TypeError, ValueError, KeyError):
                 continue
-            records.append({"market": x.get("REF_AREA") or area, "date": year, indicator: value})
+            records.append({"market": x.get("REF_AREA") or area, "year": year, indicator: value})
 
-    cols = ["market", "date", indicator]
+    cols = ["market", "year", indicator]
     if not records:
         return pd.DataFrame(columns=cols)
     return (
         pd.DataFrame(records)
-        .drop_duplicates(subset=["market", "date"])
-        .sort_values(["market", "date"])
+        .drop_duplicates(subset=["market", "year"])
+        .sort_values(["market", "year"])
         .reset_index(drop=True)
     )
 
@@ -192,7 +192,7 @@ def extract_transform(
 
     Returns
     -------
-    pd.DataFrame with columns [proxy_id, market, date, value, labels, metric].
+    pd.DataFrame with columns [proxy_id, market, year, value, labels, metric].
     """
     if isinstance(indicators, str):
         indicators = [indicators]
@@ -206,7 +206,7 @@ def extract_transform(
     merged = None
     for ind in indicators:
         d = _fetch(ind, start_year, end_year, mkts, database=database)
-        merged = d if merged is None else merged.merge(d, on=["market", "date"], how="outer")
+        merged = d if merged is None else merged.merge(d, on=["market", "year"], how="outer")
     if merged is None or merged.empty:
         return empty
 
@@ -247,6 +247,6 @@ def extract_transform(
 
     return (
         merged[OUTPUT_COLUMNS]
-        .sort_values(["market", "date"])
+        .sort_values(["market", "year"])
         .reset_index(drop=True)
     )

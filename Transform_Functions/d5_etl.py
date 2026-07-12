@@ -13,7 +13,7 @@ from pathlib import Path
 import pandas as pd
 
 
-OUTPUT_COLUMNS = ["proxy_id", "market", "date", "value", "labels", "metric"]
+OUTPUT_COLUMNS = ["proxy_id", "market", "year", "value", "labels", "metric"]
 
 # Correlates of War state abbreviations -> project ISO3 market codes.
 # Several COW abbreviations are not ISO3 (e.g. AUL=Australia, AUS=Austria).
@@ -83,11 +83,11 @@ def extract_transform(
     # COW documents -9 as missing; valid CINC scores are bounded [0, 1].
     df = df.dropna(subset=["year", "cinc", "market"])
     df = df[df["cinc"].between(0, 1, inclusive="both")].copy()
-    df["date"] = df["year"].astype(int)
+    df["year"] = df["year"].astype(int)
 
-    duplicated = df.duplicated(["market", "date"], keep=False)
+    duplicated = df.duplicated(["market", "year"], keep=False)
     if duplicated.any():
-        examples = df.loc[duplicated, ["market", "date"]].head().to_dict("records")
+        examples = df.loc[duplicated, ["market", "year"]].head().to_dict("records")
         raise ValueError(f"Duplicate NMC country-year rows found: {examples}")
 
     df["proxy_id"] = "D5_" + df["market"]
@@ -95,5 +95,5 @@ def extract_transform(
     df["labels"] = "CINC score"
     df["metric"] = None
 
-    result = df[OUTPUT_COLUMNS].sort_values(["market", "date"])
+    result = df[OUTPUT_COLUMNS].sort_values(["market", "year"])
     return result.reset_index(drop=True)

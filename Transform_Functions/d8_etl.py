@@ -14,7 +14,7 @@ from pathlib import Path
 import pandas as pd
 
 
-OUTPUT_COLUMNS = ["proxy_id", "market", "date", "value", "labels", "metric"]
+OUTPUT_COLUMNS = ["proxy_id", "market", "year", "value", "labels", "metric"]
 
 # COW numeric code -> project ISO3, for our 35-country universe. Verified against
 # the Voeten ideal-point file (same COW coding family). Germany has two historical
@@ -100,18 +100,18 @@ def extract_transform(
     # AgreementScores stores both directed orderings -> identical symmetric rows.
     df = df.drop_duplicates(["idx", "market", "year"])
 
-    df = df.rename(columns={"year": "date", "agree": "value"})
-    df["date"] = df["date"].astype(int)
+    df = df.rename(columns={"agree": "value"})
+    df["year"] = df["year"].astype(int)
     df["proxy_id"] = "D8_" + df["idx"].astype(str) + "_" + df["market"]
     df["value"] = df["value"]*100
     df["value"] = df["value"].round(decimals)
     df["labels"] = "%"
     df["metric"] = None
 
-    duplicated = df.duplicated(["proxy_id", "date"], keep=False)
+    duplicated = df.duplicated(["proxy_id", "year"], keep=False)
     if duplicated.any():
-        examples = df.loc[duplicated, ["proxy_id", "date"]].head().to_dict("records")
-        raise ValueError(f"Duplicate (proxy_id, date) rows found: {examples}")
+        examples = df.loc[duplicated, ["proxy_id", "year"]].head().to_dict("records")
+        raise ValueError(f"Duplicate (proxy_id, year) rows found: {examples}")
 
-    result = df[OUTPUT_COLUMNS].sort_values(["market", "proxy_id", "date"])
+    result = df[OUTPUT_COLUMNS].sort_values(["market", "proxy_id", "year"])
     return result.reset_index(drop=True)

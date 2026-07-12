@@ -12,7 +12,7 @@ IMPORTANT CAVEATS (this list is the CURRENTLY-active set as of 2026):
     before 2026 (e.g. the USA, withdrawn 1986) are absent, so the count is the
     number of *today's* acceptors that existed by year Y, not the true net
     active count in that year.
-  * Each date is the CURRENT declaration's deposit date, which for several
+  * Each entry uses the CURRENT declaration deposit year, which for several
     long-standing members is a later MODIFICATION/replacement (e.g. UK 2017,
     Canada 2023, Netherlands 2017, Germany 2025). Those members therefore only
     'appear' from their re-declaration year, which understates earlier years and
@@ -25,7 +25,7 @@ import pandas as pd
 
 UN_MEMBERS = 193
 
-# (state, deposit date of the currently-in-force declaration). Year is parsed
+# (state, deposit year of the currently-in-force declaration). Year is parsed
 # from the trailing token. Sourced from icj-cij.org/declarations (Feb 2026).
 ICJ_DECLARATIONS = [
     ("Australia", 2002), ("Austria", 1971), ("Barbados", 1980), ("Belgium", 1958),
@@ -72,9 +72,9 @@ def extract_transform(raw_file_path=None, start_year: int = 2000,
         records.append({
             "proxy_id": "D10_GLO",
             "market": "GLO",
-            "date": year,
+            "year": year,
             "value": value,
             "labels": "%" if as_share else "number of states",
             "metric": None,
         })
-    return pd.DataFrame(records, columns=["proxy_id", "market", "date", "value", "labels", "metric"])
+    return pd.DataFrame(records, columns=["proxy_id", "market", "year", "value", "labels", "metric"])

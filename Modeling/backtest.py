@@ -25,7 +25,7 @@ DEFAULT_HORIZONS = (1, 3, 5, 10)
 def _meta_rows(modeling_df: pd.DataFrame) -> pd.DataFrame:
     cols = ["proxy_id", "proxy_type", "lower_bound", "upper_bound", "allow_negative"]
     return (
-        modeling_df.sort_values("date")
+        modeling_df.sort_values("year")
         .groupby("proxy_id", as_index=False)
         .tail(1)[cols]
         .set_index("proxy_id")
@@ -62,12 +62,12 @@ def run_backtest(
 ) -> pd.DataFrame:
     """Return one metrics row per horizon plus an ALL-horizons summary row."""
     meta = _meta_rows(modeling_df)
-    years = sorted(int(y) for y in modeling_df["date"].dropna().unique())
+    years = sorted(int(y) for y in modeling_df["year"].dropna().unique())
     max_h = max(horizons)
 
     preds = []
     for cutoff in years:
-        train = modeling_df[modeling_df["date"] <= cutoff].copy()
+        train = modeling_df[modeling_df["year"] <= cutoff].copy()
         # need at least one series with enough history to fit trends
         if train.dropna(subset=["y"]).groupby("proxy_id").size().max() < min_train_years:
             continue
@@ -81,12 +81,12 @@ def run_backtest(
             continue
         fc = fc.rename(columns={"yhat": "yhat"})
         fc["cutoff"] = cutoff
-        fc["horizon"] = fc["date"].astype(int) - cutoff
+        fc["horizon"] = fc["year"].astype(int) - cutoff
 
-        actual = modeling_df[modeling_df["date"].isin(target_years)][
-            ["proxy_id", "date", "value", "y"]
+        actual = modeling_df[modeling_df["year"].isin(target_years)][
+            ["proxy_id", "year", "value", "y"]
         ].rename(columns={"value": "value_true", "y": "y_true"})
-        merged = fc.merge(actual, on=["proxy_id", "date"], how="inner")
+        merged = fc.merge(actual, on=["proxy_id", "year"], how="inner")
         preds.append(merged)
 
     if not preds:

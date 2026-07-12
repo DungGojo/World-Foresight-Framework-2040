@@ -11,7 +11,7 @@ from pathlib import Path
 import pandas as pd
 
 
-OUTPUT_COLUMNS = ["proxy_id", "market", "date", "value", "labels", "metric"]
+OUTPUT_COLUMNS = ["proxy_id", "market", "year", "value", "labels", "metric"]
 
 # Our 35-country universe (ISO3). The Voeten file is already keyed by ISO3
 # (`iso3c`), so membership is a direct filter — no code translation needed.
@@ -62,11 +62,11 @@ def extract_transform(
     df = df.dropna(subset=["iso3c", "year", "value"])
 
     df["market"] = df["iso3c"]
-    df["date"] = df["year"].astype(int)
+    df["year"] = df["year"].astype(int)
 
-    duplicated = df.duplicated(["market", "date"], keep=False)
+    duplicated = df.duplicated(["market", "year"], keep=False)
     if duplicated.any():
-        examples = df.loc[duplicated, ["market", "date"]].head().to_dict("records")
+        examples = df.loc[duplicated, ["market", "year"]].head().to_dict("records")
         raise ValueError(f"Duplicate country-year rows found: {examples}")
 
     df["proxy_id"] = "D6_" + df["market"]
@@ -74,5 +74,5 @@ def extract_transform(
     df["labels"] = "Index"
     df["metric"] = None
 
-    result = df[OUTPUT_COLUMNS].sort_values(["market", "date"])
+    result = df[OUTPUT_COLUMNS].sort_values(["market", "year"])
     return result.reset_index(drop=True)

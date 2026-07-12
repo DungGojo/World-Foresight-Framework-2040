@@ -62,7 +62,7 @@ def build_scenario_rows(
         .merge(meta, on="proxy_id", how="left")
         .merge(diagnostics[diag_cols], on="proxy_id", how="left")
     )
-    min_date_by_proxy = df.groupby("proxy_id")["date"].min()
+    min_year_by_proxy = df.groupby("proxy_id")["year"].min()
 
     rows = []
     for _, row in df.iterrows():
@@ -79,7 +79,7 @@ def build_scenario_rows(
         optimistic_delta = optimistic_value - main_value
         pessimistic_delta = pessimistic_value - main_value
 
-        horizon = max(1, int(row["date"]) - int(min_date_by_proxy[row["proxy_id"]]) + 1)
+        horizon = max(1, int(row["year"]) - int(min_year_by_proxy[row["proxy_id"]]) + 1)
         residual_std = row.get("residual_std")
         residual_std = 0.0 if pd.isna(residual_std) else float(residual_std)
         ci_y_delta = ci_mult * residual_std * np.sqrt(horizon)
@@ -98,7 +98,7 @@ def build_scenario_rows(
             "id": row["id"],
             "proxy_id": row["proxy_id"],
             "market": row["market"],
-            "date": int(row["date"]),
+            "year": int(row["year"]),
             "labels": row.get("labels"),
             "metric": row.get("metric"),
         }
@@ -126,9 +126,9 @@ def build_scenario_rows(
         })
 
     columns = [
-        "id", "proxy_id", "market", "date", "value", "labels", "metric",
+        "id", "proxy_id", "market", "year", "value", "labels", "metric",
         "scenario", "lower_ci", "upper_ci",
     ]
     return pd.DataFrame(rows, columns=columns).sort_values(
-        ["id", "market", "date", "scenario"]
+        ["id", "market", "year", "scenario"]
     ).reset_index(drop=True)

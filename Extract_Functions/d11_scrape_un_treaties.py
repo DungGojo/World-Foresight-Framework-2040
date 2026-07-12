@@ -4,7 +4,7 @@ Scrape UN Treaty Collection participant tables for the D11 treaty basket.
 Each ViewDetails.aspx page server-renders a participant grid
 (id ...tblgrid): Participant | Signature | Ratification/Acceptance/Approval/Accession
 (column order/labels vary per treaty). We keep countries that became a FULL PARTY
-(a date in the ratification/accession column); signatory-only rows are dropped.
+(a ratification/accession year); signatory-only rows are dropped.
 
 Column pick: skip any column whose header mentions "signature" (some treaties label
 their signature column "Signature, Succession to signature(d)" — that 'succession'
@@ -29,7 +29,7 @@ import time
 import requests
 from bs4 import BeautifulSoup
 
-# This script lives in Code/Transform_Functions/; CSVs go to <repo>/Raw Data/UN_Treaties/.
+# This script lives in Data Preparation/Extract_Functions/; CSVs go to <repo>/Raw Data/UN_Treaties/.
 _REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 OUT_DIR = os.path.join(_REPO_ROOT, "Raw Data", "UN_Treaties")
 os.makedirs(OUT_DIR, exist_ok=True)

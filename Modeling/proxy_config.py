@@ -109,7 +109,7 @@ def validate_proxy_config(
         raise ValueError(f"UNBOUNDED proxy_type should not define lower_bound or upper_bound: {examples}")
 
     if timeseries_df is not None and min_datapoints > 0:
-        required_timeseries_cols = {"id", "date", "value"}
+        required_timeseries_cols = {"id", "year", "value"}
         missing_timeseries_cols = required_timeseries_cols - set(timeseries_df.columns)
         if missing_timeseries_cols:
             raise ValueError(
@@ -117,12 +117,12 @@ def validate_proxy_config(
                 f"{sorted(missing_timeseries_cols)}"
             )
 
-        ts = timeseries_df[["id", "date", "value"]].copy()
+        ts = timeseries_df[["id", "year", "value"]].copy()
         ts["id"] = ts["id"].astype(str).str.strip()
-        ts["date"] = pd.to_numeric(ts["date"], errors="coerce")
+        ts["year"] = pd.to_numeric(ts["year"], errors="coerce")
         ts["value"] = pd.to_numeric(ts["value"], errors="coerce")
         datapoint_counts = (
-            ts.dropna(subset=["id", "date", "value"])
+            ts.dropna(subset=["id", "year", "value"])
             .groupby("id")
             .size()
         )

@@ -27,7 +27,7 @@ toward the denominator but neither bloc share, so West% + East% + Other% = 100.
 
 import pandas as pd
 
-OUTPUT_COLUMNS = ["proxy_id", "market", "date", "value", "labels", "metric"]
+OUTPUT_COLUMNS = ["proxy_id", "market", "year", "value", "labels", "metric"]
 
 WINDOW = 5                 # rolling window length in years
 MIN_WINDOW_TIV = 1.0       # skip country-windows with negligible total imports
@@ -136,7 +136,7 @@ def extract_transform(raw_file_path, start_year=2000, end_year=2025,
             west = float(by_sup[by_sup.index.isin(WESTERN_SUPPLIERS)].sum() / total)
             east = float(by_sup[by_sup.index.isin(EASTERN_SUPPLIERS)].sum() / total)
             other = max(0.0, 1.0 - west - east)   # non-aligned suppliers (residual)
-            out.append({"market": market, "date": t,
+            out.append({"market": market, "year": t,
                         "D7_1": round(hhi * 100, decimals),
                         "D7_2": round(west * 100, decimals),
                         "D7_3": round(east * 100, decimals),
@@ -150,11 +150,11 @@ def extract_transform(raw_file_path, start_year=2000, end_year=2025,
     frames = []
     meta = {"D7_1": ("HHI Index", 1), "D7_2": ("%", 2), "D7_3": ("%", 3), "D7_4": ("%", 4)}
     for col, (label, idx) in meta.items():
-        part = wide[["market", "date", col]].rename(columns={col: "value"})
+        part = wide[["market", "year", col]].rename(columns={col: "value"})
         part["proxy_id"] = f"D7_{idx}_" + part["market"]
         part["labels"] = label
         part["metric"] = None
         frames.append(part[OUTPUT_COLUMNS])
 
     result = pd.concat(frames, ignore_index=True)
-    return result.sort_values(["market", "proxy_id", "date"]).reset_index(drop=True)
+    return result.sort_values(["market", "proxy_id", "year"]).reset_index(drop=True)

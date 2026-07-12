@@ -32,7 +32,7 @@ def _latest_series_meta(modeling_df: pd.DataFrame) -> pd.DataFrame:
     ]
     meta_cols = [c for c in meta_cols if c in modeling_df.columns]
     return (
-        modeling_df.sort_values("date")
+        modeling_df.sort_values("year")
         .groupby("proxy_id", as_index=False)
         .tail(1)[meta_cols]
         .reset_index(drop=True)
@@ -58,9 +58,9 @@ def run_forecast(
     if diagnostics_df is None:
         diagnostics_df = compute_series_diagnostics(modeling_df)
 
-    latest_year = int(modeling_df["date"].max())
+    latest_year_by_proxy = modeling_df.groupby("proxy_id")["year"].max()
     if start_forecast_year is None:
-        start_forecast_year = latest_year + 1
+        start_forecast_year = int(latest_year_by_proxy.min()) + 1
     if horizon_year < start_forecast_year:
         raise ValueError("horizon_year must be >= start_forecast_year")
 

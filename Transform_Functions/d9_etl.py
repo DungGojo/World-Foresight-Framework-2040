@@ -24,7 +24,7 @@ from pathlib import Path
 import pandas as pd
 
 
-OUTPUT_COLUMNS = ["proxy_id", "market", "date", "value", "labels", "metric"]
+OUTPUT_COLUMNS = ["proxy_id", "market", "year", "value", "labels", "metric"]
 
 # Our 35-country universe (ISO3) — used to filter the reporter side.
 PROJECT_MARKETS = [
@@ -119,8 +119,8 @@ def extract_transform(raw_file_path, start_year: int = 2000, end_year: int = 202
 
     both["proxy_id"] = "D9_" + both["idx"].astype(str) + "_" + both["reporter"]
     both["market"] = both["reporter"]
-    both["date"] = both["year"].astype(int)
+    both["year"] = both["year"].astype(int)
     both["labels"] = "%"
     both["metric"] = None
 
-    return both[OUTPUT_COLUMNS].sort_values(["market", "proxy_id", "date"]).reset_index(drop=True)
+    return both[OUTPUT_COLUMNS].sort_values(["market", "proxy_id", "year"]).reset_index(drop=True)

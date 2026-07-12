@@ -16,11 +16,11 @@ DEFAULT_SHOCK_YEARS = (2020, 2022, 2025)
 def _filter_min_datapoints(df: pd.DataFrame, min_datapoints: int) -> pd.DataFrame:
     if min_datapoints <= 0:
         return df
-    count_frame = df[["proxy_id", "date", "value"]].copy()
-    count_frame["date"] = pd.to_numeric(count_frame["date"], errors="coerce")
+    count_frame = df[["proxy_id", "year", "value"]].copy()
+    count_frame["year"] = pd.to_numeric(count_frame["year"], errors="coerce")
     count_frame["value"] = pd.to_numeric(count_frame["value"], errors="coerce")
     counts = (
-        count_frame.dropna(subset=["proxy_id", "date", "value"])
+        count_frame.dropna(subset=["proxy_id", "year", "value"])
         .groupby("proxy_id")
         .size()
     )
@@ -34,7 +34,7 @@ def attach_proxy_config(
     min_datapoints: int = MIN_DATAPOINTS_PER_PROXY,
 ) -> pd.DataFrame:
     """Merge validated proxy config onto a long-format timeseries dataframe."""
-    required = {"id", "proxy_id", "market", "date", "value"}
+    required = {"id", "proxy_id", "market", "year", "value"}
     missing = required - set(timeseries_df.columns)
     if missing:
         raise ValueError(f"timeseries_df is missing required columns: {sorted(missing)}")
@@ -70,12 +70,12 @@ def prepare_modeling_frame(
     """
     df = attach_proxy_config(timeseries_df, proxy_config, min_datapoints=min_datapoints)
     df = df.copy()
-    df["date"] = pd.to_numeric(df["date"], errors="coerce").astype("Int64")
+    df["year"] = pd.to_numeric(df["year"], errors="coerce").astype("Int64")
     df["value"] = pd.to_numeric(df["value"], errors="coerce")
-    df = df.dropna(subset=["id", "proxy_id", "market", "date", "value"])
-    df["date"] = df["date"].astype(int)
+    df = df.dropna(subset=["id", "proxy_id", "market", "year", "value"])
+    df["year"] = df["year"].astype(int)
     df["proxy_id"] = df["proxy_id"].astype(str)
-    df["is_shock_year"] = df["date"].isin(set(shock_years))
+    df["is_shock_year"] = df["year"].isin(set(shock_years))
 
     # Shock-year rows stay in the data, but DOWNWEIGHT proxies give those years
     # half influence when fitting the local trend.
@@ -84,5 +84,5 @@ def prepare_modeling_frame(
     df.loc[downweight_mask, "sample_weight"] = 0.5
 
     df = add_transformed_target(df)
-    df = df.sort_values(["id", "market", "date"]).reset_index(drop=True)
+    df = df.sort_values(["id", "market", "year"]).reset_index(drop=True)
     return df

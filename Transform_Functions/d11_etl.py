@@ -8,7 +8,7 @@ import re
 
 import pandas as pd
 
-OUTPUT_COLUMNS = ["proxy_id", "market", "date", "value", "labels", "metric"]
+OUTPUT_COLUMNS = ["proxy_id", "market", "year", "value", "labels", "metric"]
 
 UN_MEMBERS = 193           # denominator: current UN member states
 MARKET = "GLO"             # single global series per treaty
@@ -83,12 +83,12 @@ def extract_transform(raw_dir, start_year: int = 2000, end_year: int = 2025,
             records.append({
                 "proxy_id": f"D11_{idx}",
                 "market":   MARKET,
-                "date":     year,
+                "year":     year,
                 "value":    round(n_party / un_members * 100, 2),
                 "labels":   TREATY_NAMES.get(idx, os.path.basename(f)),
                 "metric":   None,
                 "_idx":     idx,
             })
 
-    result = pd.DataFrame(records).sort_values(["_idx", "date"]).drop(columns="_idx")
+    result = pd.DataFrame(records).sort_values(["_idx", "year"]).drop(columns="_idx")
     return result[OUTPUT_COLUMNS].reset_index(drop=True)

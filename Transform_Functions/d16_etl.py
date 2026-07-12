@@ -6,7 +6,7 @@ from Transform_Functions.metric_scaling import choose_metric, scale_values
 from Transform_Functions.world_bank_etl import MARKETS, _fetch
 
 
-OUTPUT_COLUMNS = ["proxy_id", "market", "date", "value", "labels", "metric"]
+OUTPUT_COLUMNS = ["proxy_id", "market", "year", "value", "labels", "metric"]
 
 RND_SHARE_OF_GDP = "GB.XPD.RSDV.GD.ZS"
 GDP_CURRENT_USD = "NY.GDP.MKTP.CD"
@@ -23,7 +23,7 @@ def extract_transform(start_year: int = 2000, end_year: int = 2024, markets: lis
     mkts = markets or MARKETS
     share = _fetch(RND_SHARE_OF_GDP, start_year, end_year, mkts)
     gdp = _fetch(GDP_CURRENT_USD, start_year, end_year, mkts)
-    merged = share.merge(gdp, on=["market", "date"], how="inner")
+    merged = share.merge(gdp, on=["market", "year"], how="inner")
 
     empty = pd.DataFrame(columns=OUTPUT_COLUMNS)
     if merged.empty:
@@ -41,5 +41,5 @@ def extract_transform(start_year: int = 2000, end_year: int = 2024, markets: lis
     merged["labels"] = "USD"
     merged["metric"] = metric
 
-    result = merged[OUTPUT_COLUMNS].sort_values(["market", "date"]).reset_index(drop=True)
+    result = merged[OUTPUT_COLUMNS].sort_values(["market", "year"]).reset_index(drop=True)
     return result

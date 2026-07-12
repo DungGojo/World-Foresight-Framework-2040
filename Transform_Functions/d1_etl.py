@@ -63,7 +63,7 @@ def extract_transform(raw_file_path: str, start_year: int = 2000, end_year: int 
 
     Returns
     -------
-    pd.DataFrame with columns [proxy_id, market, date, value, labels, metric]
+    pd.DataFrame with columns [proxy_id, market, year, value, labels, metric]
     """
     df_raw = pd.read_excel(raw_file_path, sheet_name="Current US$", header=None)
 
@@ -104,12 +104,12 @@ def extract_transform(raw_file_path: str, start_year: int = 2000, end_year: int 
             records.append({
                 "proxy_id": f"D1_{iso3}",
                 "market":   iso3,
-                "date":     year,
+                "year":     year,
                 "value":    value,
                 "labels":   "USD",
                 "metric":   "MILLIONS",
             })
 
-    result = pd.DataFrame(records, columns=["proxy_id", "market", "date", "value", "labels", "metric"])
-    result = result.sort_values(["market", "date"]).reset_index(drop=True)
+    result = pd.DataFrame(records, columns=["proxy_id", "market", "year", "value", "labels", "metric"])
+    result = result.sort_values(["market", "year"]).reset_index(drop=True)
     return result

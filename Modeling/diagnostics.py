@@ -173,12 +173,12 @@ def compute_series_diagnostics(
     """
     records = []
     for proxy_id, g in modeling_df.groupby("proxy_id", sort=False):
-        g = g.sort_values("date").dropna(subset=["value", "y"])
+        g = g.sort_values("year").dropna(subset=["value", "y"])
         n = len(g)
         if n < 5:
             continue
 
-        years = g["date"].to_numpy(dtype=float)
+        years = g["year"].to_numpy(dtype=float)
         values = g["value"].to_numpy(dtype=float)
         y = g["y"].to_numpy(dtype=float)
         t = years - years.min()
@@ -231,7 +231,7 @@ def compute_series_diagnostics(
         if n >= 5 and g["is_shock_year"].any():
             no_shock = g[~g["is_shock_year"]]
             if len(no_shock) >= 3:
-                tt = no_shock["date"].to_numpy(dtype=float) - years.min()
+                tt = no_shock["year"].to_numpy(dtype=float) - years.min()
                 yy = no_shock["y"].to_numpy(dtype=float)
                 slope_ns, intercept_ns = np.polyfit(tt, yy, 1)
                 yhat_ns_all = intercept_ns + slope_ns * t
@@ -245,12 +245,12 @@ def compute_series_diagnostics(
             if n >= 3 else 0.5
         )
 
-        first_year = int(g["date"].iloc[0])
-        last_year = int(g["date"].iloc[-1])
+        first_year = int(g["year"].iloc[0])
+        last_year = int(g["year"].iloc[-1])
         full_years = max(1, last_year - first_year)
         last_value = float(values[-1])
         first_value = float(values[0])
-        value_by_year = dict(zip(g["date"].astype(int), values))
+        value_by_year = dict(zip(g["year"].astype(int), values))
 
         cagr_1y = _safe_cagr(value_by_year.get(last_year - 1), last_value, 1)
         cagr_3y = _safe_cagr(value_by_year.get(last_year - 3), last_value, 3)

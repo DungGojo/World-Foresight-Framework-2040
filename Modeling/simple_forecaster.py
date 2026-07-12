@@ -79,10 +79,10 @@ def _pooled_slopes_by_id(modeling_df: pd.DataFrame) -> dict:
     """Median local trend by proxy family (`id`), mapped back to each proxy_id."""
     recs = []
     for proxy_id, g in modeling_df.groupby("proxy_id", sort=False):
-        g = g.sort_values("date").dropna(subset=["y"])
+        g = g.sort_values("year").dropna(subset=["y"])
         if len(g) < 2:
             continue
-        years = g["date"].to_numpy(dtype=float)
+        years = g["year"].to_numpy(dtype=float)
         y = g["y"].to_numpy(dtype=float)
         w = g.get("sample_weight", pd.Series(1.0, index=g.index)).to_numpy(dtype=float)
         recs.append({"proxy_id": proxy_id, "id": g["id"].iloc[0],
@@ -139,11 +139,11 @@ def _series_table(modeling_df: pd.DataFrame, diagnostics: pd.DataFrame) -> pd.Da
 
     rows = []
     for proxy_id, g in modeling_df.groupby("proxy_id", sort=False):
-        g = g.sort_values("date").dropna(subset=["y"])
+        g = g.sort_values("year").dropna(subset=["y"])
         n = len(g)
         if n < 2:
             continue
-        years = g["date"].to_numpy(dtype=float)
+        years = g["year"].to_numpy(dtype=float)
         y = g["y"].to_numpy(dtype=float)
         values = g["value"].to_numpy(dtype=float)
         weights = g.get("sample_weight", pd.Series(1.0, index=g.index)).to_numpy(dtype=float)
@@ -197,7 +197,7 @@ def _series_table(modeling_df: pd.DataFrame, diagnostics: pd.DataFrame) -> pd.Da
 def forecast_transformed(modeling_df, diagnostics, future_years) -> pd.DataFrame:
     """Transformed-scale yhat for every proxy_id and future year.
 
-    Columns: proxy_id, date, yhat.
+    Columns: proxy_id, year, yhat.
     """
     table = _series_table(modeling_df, diagnostics)
     future_years = [int(y) for y in future_years]
@@ -211,7 +211,7 @@ def forecast_transformed(modeling_df, diagnostics, future_years) -> pd.DataFrame
             drift = row["blended_slope"] * _damped_steps(horizon, row["phi"])
             drift = float(np.clip(drift, -row["max_drift"], row["max_drift"]))
             yhat = min(row["last_y"] + drift, row["y_ceiling"])
-            records.append({"proxy_id": proxy_id, "date": year, "yhat": float(yhat)})
+            records.append({"proxy_id": proxy_id, "year": year, "yhat": float(yhat)})
     return pd.DataFrame(records)
 
 
