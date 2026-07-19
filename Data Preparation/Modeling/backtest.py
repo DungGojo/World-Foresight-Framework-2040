@@ -6,7 +6,7 @@ the 2040 horizon it actually forecasts. This module trains on data up to a
 cutoff year and checks the forecast 1, 3, 5 and 10 years later against what
 really happened, so the reported error reflects the horizons we care about.
 
-Metrics are reported on both scales:
+R2 is reported on both scales:
   * `_y`     : transformed modelling scale (what the model optimises).
   * `_value` : original units after inverse transform (what a reader sees).
 """
@@ -44,15 +44,6 @@ def _r2(actual: np.ndarray, pred: np.ndarray) -> float:
     if ss_tot <= 1e-12:
         return np.nan
     return float(1 - ss_res / ss_tot)
-
-
-def _mae(actual: np.ndarray, pred: np.ndarray) -> float:
-    actual = np.asarray(actual, dtype=float)
-    pred = np.asarray(pred, dtype=float)
-    mask = ~np.isnan(actual) & ~np.isnan(pred)
-    if not mask.any():
-        return np.nan
-    return float(np.mean(np.abs(actual[mask] - pred[mask])))
 
 
 def run_backtest(
@@ -110,17 +101,13 @@ def run_backtest(
             "horizon_years": h,
             "n": int(len(sub)),
             "r2_y": _r2(sub["y_true"], sub["yhat"]),
-            "mae_y": _mae(sub["y_true"], sub["yhat"]),
             "r2_value": _r2(sub["value_true"], sub["valuehat"]),
-            "mae_value": _mae(sub["value_true"], sub["valuehat"]),
         })
     # overall summary across all horizon rows
     rows.append({
         "horizon_years": "ALL",
         "n": int(len(allp)),
         "r2_y": _r2(allp["y_true"], allp["yhat"]),
-        "mae_y": _mae(allp["y_true"], allp["yhat"]),
         "r2_value": _r2(allp["value_true"], allp["valuehat"]),
-        "mae_value": _mae(allp["value_true"], allp["valuehat"]),
     })
     return pd.DataFrame(rows)

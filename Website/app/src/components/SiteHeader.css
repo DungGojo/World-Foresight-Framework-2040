@@ -1,0 +1,19 @@
+.site-header{height:var(--header-h);display:flex;align-items:center;justify-content:space-between;gap:28px;
+  padding:0 var(--gutter);position:relative;z-index:40;border-bottom:1px solid var(--line)}
+.site-header.dark{color:#f7f2e9;border-bottom-color:rgba(247,242,233,.2);background:var(--space)}
+.site-header.light{color:var(--ink);background:var(--bg)}
+.site-brand{display:inline-flex;align-items:center;gap:12px;font-family:var(--serif);font-size:17px;font-weight:500;line-height:.96;letter-spacing:-.02em;white-space:nowrap}
+.site-mark{width:35px;height:35px;fill:none;stroke:currentColor;stroke-width:.8;opacity:.9;flex:0 0 auto}
+.site-nav{height:100%;display:flex;align-items:stretch;gap:clamp(18px,3vw,48px)}
+.site-nav a{position:relative;display:flex;align-items:center;font-size:13px;color:inherit;opacity:.66;transition:opacity .25s var(--ease)}
+.site-nav a::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+.site-nav a:hover,.site-nav a.active{opacity:1}
+.site-nav a.active::after{transform:scaleX(1)}
+
+@media (max-width:680px){
+  .site-header{height:auto;min-height:66px;align-items:flex-start;padding-top:14px;padding-bottom:10px;gap:12px;overflow-x:auto}
+  .site-brand{font-size:14px;gap:8px}
+  .site-mark{width:28px;height:28px}
+  .site-nav{gap:18px;min-height:42px}
+  .site-nav a{font-size:11px}
+}

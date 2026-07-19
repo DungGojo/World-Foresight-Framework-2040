@@ -1,0 +1,56 @@
+#intro{position:fixed;inset:0;background:var(--space);overflow:hidden;color:#f7f2e9}
+#intro #bg{position:absolute;inset:0;width:100%;height:100%;display:block;
+  background:var(--space);
+  transition:filter 1.2s var(--ease),transform 1.7s var(--ease)}
+.intro-topline{position:absolute;top:0;left:var(--gutter);right:var(--gutter);height:82px;z-index:5;
+  display:flex;align-items:center;border-bottom:1px solid rgba(247,242,233,.2)}
+.intro-brand{font-family:var(--serif);font-size:20px;font-weight:500;letter-spacing:-.015em}
+#intro .hero{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
+  padding:108px var(--gutter) 44px;pointer-events:none;z-index:3;max-width:min(54vw,780px)}
+#intro .hero::before{content:"";position:absolute;inset:-20vh -12vw -20vh calc(var(--gutter) * -1);opacity:0;
+  transition:opacity 1.2s var(--ease);background:linear-gradient(90deg,rgba(6,16,22,.94) 0%,rgba(6,16,22,.68) 58%,transparent 100%)}
+#intro .hero.show::before{opacity:1}
+#intro .hero>*{position:relative;opacity:0;transform:translateY(22px);pointer-events:auto;
+  transition:opacity 1s var(--ease),transform 1s var(--ease)}
+#intro .hero.show>*{opacity:1;transform:none}
+#intro .hero.show>*:nth-child(2){transition-delay:.12s}
+#intro .hero.show>*:nth-child(3){transition-delay:.22s}
+#intro .hero.show>*:nth-child(4){transition-delay:.34s}
+#intro h1{font-family:var(--serif);font-weight:400;letter-spacing:-.035em;color:#f8f3e9;
+  font-size:clamp(48px,5.8vw,88px);line-height:.98;max-width:10.5ch;text-wrap:balance}
+#intro .sub{margin-top:28px;max-width:41em;color:rgba(247,242,233,.76);font-size:clamp(14px,1.25vw,18px);line-height:1.75}
+#intro .owner{margin-top:24px;color:rgba(247,242,233,.52);font-size:13px;letter-spacing:.06em}
+#intro .row{margin-top:34px}
+.intro-cta{min-width:260px;display:flex;align-items:center;justify-content:space-between;gap:34px;padding:17px 20px 17px 24px;
+  background:#f8f3e9;color:var(--space);border:1px solid #f8f3e9;font-size:14px;font-weight:600;
+  transition:background .3s var(--ease),color .3s var(--ease),transform .3s var(--ease)}
+.intro-cta:hover{background:transparent;color:#f8f3e9;transform:translateX(3px)}
+.intro-cta:disabled{cursor:wait;opacity:.78}
+.atmosphere-veil{position:absolute;inset:0;z-index:20;pointer-events:none;opacity:0;overflow:hidden;
+  background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.98),rgba(205,225,236,.82) 34%,rgba(157,195,220,.2) 62%,transparent 74%)}
+.atmosphere-veil i{position:absolute;width:70vw;height:32vh;border-radius:50%;background:rgba(255,255,255,.42);filter:blur(45px)}
+.atmosphere-veil i:nth-child(1){left:-15vw;top:24vh}.atmosphere-veil i:nth-child(2){right:-18vw;top:42vh}.atmosphere-veil i:nth-child(3){left:22vw;bottom:-8vh}
+#intro.diving .hero,#intro.diving .intro-topline{opacity:0;transition:opacity .48s ease}
+#intro.diving #bg{filter:brightness(1.35);transform:scale(1.025)}
+#intro.diving .atmosphere-veil{animation:atmosphere-in 1.85s var(--ease) forwards}
+#intro.diving .atmosphere-veil i:nth-child(1){animation:cloud-cross 1.7s ease-in forwards}
+#intro.diving .atmosphere-veil i:nth-child(2){animation:cloud-cross-reverse 1.8s ease-in forwards}
+@keyframes atmosphere-in{0%{opacity:0;transform:scale(.45)}58%{opacity:.45}100%{opacity:1;transform:scale(1.8)}}
+@keyframes cloud-cross{from{transform:translateX(-30vw) scale(.6)}to{transform:translateX(110vw) scale(1.8)}}
+@keyframes cloud-cross-reverse{from{transform:translateX(30vw) scale(.7)}to{transform:translateX(-110vw) scale(1.9)}}
+
+@media (max-width:900px){
+  #intro .hero{max-width:78vw}
+}
+@media (max-width:640px){
+  .intro-topline{height:66px}.intro-brand{font-size:16px}
+  #intro .hero{justify-content:flex-end;max-width:none;padding:90px var(--gutter) 8vh}
+  #intro .hero::before{inset:-20vh calc(var(--gutter) * -1);background:linear-gradient(0deg,rgba(6,16,22,.98),rgba(6,16,22,.58) 68%,transparent)}
+  #intro h1{font-size:clamp(42px,13vw,64px);max-width:10ch}
+  #intro .sub{font-size:14px;line-height:1.6;margin-top:20px}
+  #intro .owner{margin-top:16px}
+  .intro-cta{min-width:min(100%,280px)}
+}
+@media (prefers-reduced-motion:reduce){
+  #intro.diving .atmosphere-veil{animation:none;opacity:1;background:#e7eef2}
+}

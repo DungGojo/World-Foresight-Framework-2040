@@ -1,0 +1,38 @@
+/* World Observatory design system — shared by every present and future topic. */
+:root{
+  --bg:#f4efe6;
+  --panel:#fbf8f1;
+  --paper:#fffdf8;
+  --ink:#11191f;
+  --muted:#656963;
+  --line:#d7cfc0;
+  --navy:#17314f;
+
+  /* dark — cinematic (intro, Level 1 hero) */
+  --space:#061016;
+  --space-soft:#0d171d;
+  --glow:#15334e;
+  --on-dark:#ffffff;
+  --on-dark-muted:rgba(255,255,255,.68);
+
+  /* force accents (muted/editorial — do not brighten) */
+  --power:#b43a31;
+  --tech:#3f6f91;
+  --planet:#647b45;
+  --people:#ba8030;
+  --economy:#6f6284;
+
+  /* type */
+  --serif:"Fraunces",Georgia,"Times New Roman",serif;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+
+  /* motion */
+  --ease:cubic-bezier(.22,1,.36,1);
+
+  /* chrome */
+  --rail:300px;
+  --radius:3px;
+  --header-h:72px;
+  --gutter:clamp(20px,4vw,64px);
+  --content:1480px;
+}

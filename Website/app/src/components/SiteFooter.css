@@ -1,0 +1,8 @@
+.site-footer{width:100%;border-top:1px solid var(--line)}
+.site-footer.light{background:var(--bg);color:var(--muted)}
+.site-footer.dark{background:var(--space);color:rgba(247,242,233,.55);border-top-color:rgba(247,242,233,.16)}
+.site-footer-inner{min-height:96px;display:flex;align-items:center;justify-content:space-between;gap:24px;font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+
+@media (max-width:540px){
+  .site-footer-inner{min-height:86px;align-items:flex-start;flex-direction:column;justify-content:center;gap:8px}
+}

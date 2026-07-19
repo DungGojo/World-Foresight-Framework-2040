@@ -1,0 +1,31 @@
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+.Rhistory
+
+# Generated outputs
+Model Outputs/
+*.bak
+*.hardcoded_bak
+*.singleproxy_bak
+*.3anchor_bak
+*.wbgapi_bak
+*.stacker_backup
+
+# Office temp/lock files
+~$*
+
+# Secrets
+.env
