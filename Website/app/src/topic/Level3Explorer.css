@@ -1,5 +1,5 @@
 .l3{font-family:var(--sans);color:var(--ink)}.l3-loading{padding:90px 0;text-align:center;color:var(--muted)}
-.l3-controls{display:grid;grid-template-columns:1.05fr 1.75fr .9fr;gap:0;border:1px solid var(--line);background:var(--paper)}.l3.compact .l3-controls{grid-template-columns:1fr;gap:16px;border:0;background:transparent}
+.l3-controls{display:grid;grid-template-columns:minmax(240px,.85fr) minmax(0,2.15fr);gap:0;border:1px solid var(--line);background:var(--paper)}.l3.compact .l3-controls{grid-template-columns:1fr;gap:16px;border:0;background:transparent}
 .l3-field{padding:18px 20px;border-right:1px solid var(--line);min-height:218px}.l3-field:last-child{border-right:0}.l3-field>label{display:block;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
 .l3-search{width:100%;padding:6px 0;border:0;border-bottom:1px solid var(--line);background:transparent;font-size:12px;color:var(--ink);margin-bottom:8px;outline:none}.l3-field select{width:100%;padding:8px 28px 8px 0;border:0;background:transparent;font-size:12px;color:var(--ink)}.l3-unit{margin-top:5px;font-size:9px;color:var(--muted)}
 .l3-country-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:2px 18px;max-height:165px;overflow-y:auto;padding:2px 10px 4px 0;scrollbar-color:var(--line) transparent}
@@ -13,3 +13,59 @@
 .l3.compact .l3-chartwrap{padding-top:16px}.l3.compact>.btn{margin-top:16px}
 @media (max-width:900px){.l3-controls{grid-template-columns:1fr}.l3-field{min-height:0;border-right:0;border-bottom:1px solid var(--line)}.l3-field:last-child{border-bottom:0}.l3-country-list{max-height:190px}.l3-method{grid-template-columns:1fr}.l3-method>div,.l3-method>div:first-child{padding:22px 0;border-right:0;border-bottom:1px solid var(--line)}}
 @media (max-width:540px){.l3-toolbar{align-items:flex-start;height:auto;padding:15px 0;gap:18px;flex-direction:column}.l3-tabs{height:36px;gap:20px}.l3-charttitle{font-size:20px}.l3-country-list{grid-template-columns:1fr}.l3-signal-inline{flex-wrap:wrap;width:100%}.l3-signal-item{flex:1 1 44%}}
+
+/* Indicator picker: a fixed-height result list, so the control keeps the same
+   footprint whether it is showing 3 matches or all 190. */
+.l3-field>label em{font-style:normal;color:var(--muted);opacity:.75;letter-spacing:.06em}
+.l3-proxy-list{height:132px;overflow-y:auto;display:flex;flex-direction:column;gap:1px;
+  margin-top:2px;padding-right:6px;scrollbar-color:var(--line) transparent}
+.l3-proxy-option{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  width:100%;text-align:left;padding:6px 8px 6px 0;background:none;border:0;cursor:pointer;
+  border-bottom:1px solid transparent;transition:background .15s,color .15s}
+.l3-proxy-option b{font-weight:500;font-size:11.5px;line-height:1.35;color:var(--muted)}
+.l3-proxy-option span{flex:none;font-size:9.5px;color:var(--muted);opacity:.6;font-variant-numeric:tabular-nums}
+.l3-proxy-option:hover b{color:var(--ink)}
+.l3-proxy-option.on b{color:var(--ink);font-weight:600}
+.l3-proxy-option.on{border-left:2px solid var(--ink);padding-left:8px}
+.l3-noresults{padding:10px 0;font-size:11px;color:var(--muted)}
+
+/* Countries by region — click a region name to take the whole group */
+.l3-field-countries>label{display:flex;align-items:baseline;gap:10px}
+.l3-clear{margin-left:auto;background:none;border:0;padding:0;cursor:pointer;font-family:var(--sans);
+  font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:underline;
+  text-underline-offset:3px}
+.l3-clear:hover{color:var(--ink)}
+.l3-region-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:14px 22px;
+  align-content:start;max-height:186px;overflow-y:auto;padding:4px 8px 4px 0;
+  scrollbar-color:var(--line) transparent}
+.l3-region-head{display:flex;align-items:center;gap:7px;width:100%;padding:0 0 5px;cursor:pointer;
+  background:none;border:0;border-bottom:1px solid var(--line);text-align:left;
+  font-family:var(--sans);font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);transition:color .15s}
+.l3-region-head:hover{color:var(--ink)}
+.l3-region-head.on{color:var(--ink)}
+.l3-region-head i{flex:none;width:11px;height:11px;border:1px solid var(--line);border-radius:2px;
+  background:var(--paper);position:relative;transition:background .15s,border-color .15s}
+.l3-region-head.on i{background:var(--ink);border-color:var(--ink)}
+.l3-region-head.on i::after{content:'';position:absolute;inset:2px;border-left:1.5px solid var(--paper);
+  border-bottom:1.5px solid var(--paper);transform:rotate(-45deg) translate(0,-1px)}
+.l3-region-head.partial i{background:var(--line);border-color:var(--muted)}
+.l3-region-countries{display:grid;gap:1px;margin-top:6px}
+.l3-country-option{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--muted);cursor:pointer;
+  padding:2px 0;transition:color .15s}
+.l3-country-option:hover{color:var(--ink)}
+.l3-country-option.on{color:var(--ink)}
+.l3-country-option input{flex:none;width:12px;height:12px;accent-color:var(--ink);cursor:pointer}
+
+/* Forecast view switch, top-right of the chart */
+.l3-chart-aside{display:flex;flex-direction:column;align-items:flex-end;gap:9px}
+.l3-viewswitch{display:flex;border:1px solid var(--line);background:var(--paper)}
+.l3-viewswitch .l3-seg{padding:6px 12px;font-size:10.5px;white-space:nowrap;background:none;border:0;
+  cursor:pointer;color:var(--muted)}
+.l3-viewswitch .l3-seg+.l3-seg{border-left:1px solid var(--line)}
+.l3-viewswitch .l3-seg.on{background:var(--ink);color:var(--paper);font-weight:600}
+
+@media (max-width:900px){
+  .l3-region-grid{max-height:none}
+  .l3-chart-aside{align-items:flex-start}
+}

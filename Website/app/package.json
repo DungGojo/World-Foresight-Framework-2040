@@ -3,12 +3,14 @@
   "private": true,
   "version": "2.0.0",
   "type": "module",
-  "description": "World Foresight Framework — Part 2: redesigned hub + data-driven topic pages",
+  "description": "World Foresight Framework \u2014 Part 2: redesigned hub + data-driven topic pages",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "build:data": "python3 scripts/build_data.py"
+    "data": "node scripts/run-pipeline.mjs",
+    "data:figures": "node scripts/run-pipeline.mjs --figures-only",
+    "prebuild": "node scripts/run-pipeline.mjs"
   },
   "dependencies": {
     "d3": "^7.9.0",

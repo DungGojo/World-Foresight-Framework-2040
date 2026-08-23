@@ -40,6 +40,12 @@ from any host — including refreshing a deep link — with no server rewrites.
 Re-run your models → `npm run build:data` → the site updates. This is the "resolve the
 data" step — it happens once, offline, in Python, not on a server per request.
 
+## Figure conventions
+
+Before writing a Level-2 finding or building its chart, read
+**`../TOPIC-FIGURE-CONVENTIONS.md`** — how findings should be written, and how charts should be
+built, settled during the Power rework and applying to all five topics.
+
 ## Edit the content (no component changes)
 
 - **Topic copy** (headlines, arguments, findings, behaviours, sources): `src/content/topics/power.js`

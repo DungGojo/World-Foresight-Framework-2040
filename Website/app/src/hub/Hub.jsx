@@ -32,6 +32,12 @@ const forceReasons = {
   },
 };
 
+// The topic accents are tuned for light backgrounds; on this dark page they read
+// almost black, so the force rows use lifted variants.
+const forceAccentOnDark = {
+  power: '#db938d', tech: '#8bafc9', planet: '#a5ba8a', people: '#debd90', economy: '#b2abbf',
+};
+
 const countryRegions = [
   { name: 'Americas', countries: [['United States', 'us'], ['Canada', 'ca'], ['Mexico', 'mx'], ['Brazil', 'br'], ['Argentina', 'ar']] },
   { name: 'Europe', countries: [['Germany', 'de'], ['France', 'fr'], ['United Kingdom', 'gb'], ['Italy', 'it'], ['Russia', 'ru'], ['Turkey', 'tr'], ['Poland', 'pl'], ['Netherlands', 'nl'], ['Ukraine', 'ua']] },
@@ -54,12 +60,11 @@ function CountryAtlas() {
     <section className="country-atlas" aria-labelledby="countries-title">
       <header className="section-heading country-atlas-heading">
         <h2 id="countries-title">Countries in focus</h2>
-        <span>34 countries · 7 regions</span>
       </header>
       <div className="region-list">
         {countryRegions.map((region) => (
           <article className="region-row" key={region.name}>
-            <header><h3>{region.name}</h3><span>{String(region.countries.length).padStart(2, '0')}</span></header>
+            <header><h3>{region.name}</h3></header>
             <div className="region-countries">
               {region.countries.map(([name, code]) => (
                 <div className="country-token" key={code} title={name}>
@@ -90,14 +95,19 @@ export default function Hub() {
           <div className="framework-copy">
             <h1>How the framework reads a changing world.</h1>
             <p>World Foresight Framework does not promise one prediction. It follows evidence across countries, tests three future paths and examines what happens when the forces shaping 2040 collide.</p>
-            <button className="framework-cta" onClick={() => navigate('/')}>
-              <span>Replay the story</span><ArrowIcon />
-            </button>
+            <div className="framework-actions">
+              <button className="framework-cta" onClick={() => navigate('/')}>
+                <span>Replay the story</span><ArrowIcon />
+              </button>
+              <button className="framework-cta primary" onClick={() => navigate('/forces')}>
+                <span>Explore forces</span><ArrowIcon />
+              </button>
+            </div>
           </div>
-          <div className="scope-graphic" aria-label="Framework scope: 34 countries, 37 indicators and three scenarios">
+          <div className="scope-graphic" aria-label="Framework scope: 34 countries, 190 indicators and three scenarios">
             <div className="scope-rings" aria-hidden="true"><i /><i /><i /></div>
             <div className="scope-core"><b>34</b><span>countries</span></div>
-            <div className="scope-stat s-one"><b>37</b><span>indicators</span></div>
+            <div className="scope-stat s-one"><b>190</b><span>indicators</span></div>
             <div className="scope-stat s-two"><b>3</b><span>scenarios</span></div>
             <div className="scope-stat s-three"><b>2000–2040</b><span>evidence horizon</span></div>
           </div>
@@ -110,7 +120,7 @@ export default function Hub() {
           </header>
           <div className="why-force-list">
             {forces.map((force, index) => (
-              <article className="why-force-row" key={force.id} style={{ '--accent': force.color }}>
+              <article className="why-force-row" key={force.id} style={{ '--accent': forceAccentOnDark[force.id] || force.color }}>
                 <span className="why-force-index">{String(index + 1).padStart(2, '0')}</span>
                 <span className="why-force-icon"><ForceGlyph id={force.id} /></span>
                 <h3>{force.name}</h3>
@@ -124,8 +134,7 @@ export default function Hub() {
 
         <section className="methodology page-container" aria-labelledby="method-title">
           <header className="section-heading methodology-heading">
-            <h2 id="method-title">How the foresight is built</h2>
-            <span>Methodology at a glance</span>
+            <h2 id="method-title">How this foresight is built</h2>
           </header>
           <div className="method-strip">
             {method.map((item, index) => (
@@ -136,10 +145,6 @@ export default function Hub() {
           </div>
         </section>
 
-        <section className="framework-next page-container">
-          <div><h2>The framework is the map.<br />The forces are where exploration begins.</h2></div>
-          <button onClick={() => navigate('/forces')}><span>Enter the five forces</span><ArrowIcon /></button>
-        </section>
       </main>
 
       <SiteFooter theme="dark" />

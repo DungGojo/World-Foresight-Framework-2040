@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { story, forceById, forces } from '../content/site';
+import { story, forceById } from '../content/site';
 import { asset } from '../lib/assets';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import ArrowIcon from '../components/ArrowIcon';
@@ -45,7 +45,6 @@ export default function Montage({ onFinish }) {
   const [interacted, setInteracted] = useState(false);
   const [leaving, setLeaving] = useState(false);
   const timer = useRef(null);
-  const leaveTimer = useRef(null);
 
   const durOf = (i) => {
     const e = eras[i];
@@ -58,8 +57,11 @@ export default function Montage({ onFinish }) {
     if (leaving) return;
     setLeaving(true);
     clearTimeout(timer.current);
-    leaveTimer.current = setTimeout(onFinish, reduce ? 120 : 2300);
-  }, [leaving, onFinish, reduce]);
+    // Hand off straight away: the shared launch overlay (useLaunch.jsx) owns
+    // the hold-then-reveal timing now, and its curtain fades in over this
+    // screen while `leaving` fades the montage chrome out underneath.
+    onFinish();
+  }, [leaving, onFinish]);
 
   useEffect(() => {
     clearTimeout(timer.current);
@@ -70,8 +72,6 @@ export default function Montage({ onFinish }) {
     }, durOf(idx));
     return () => clearTimeout(timer.current);
   }, [idx, leaving, finish]); // eslint-disable-line
-
-  useEffect(() => () => clearTimeout(leaveTimer.current), []);
 
   const advance = () => {
     setInteracted(true);
@@ -97,12 +97,16 @@ export default function Montage({ onFinish }) {
       aria-label="The story so far"
       onClick={(e) => { if (!e.target.closest('button')) advance(); }}
     >
-      <div id="mBrand">World Foresight Framework</div>
-      {!leaving ? (
-        <button className="story-skip" onClick={(event) => { event.stopPropagation(); finish(); }}>
-          <span>Skip story</span><ArrowIcon />
-        </button>
-      ) : null}
+      {/* Top bar sits ABOVE the imagery rather than floating over it, so Skip is
+          always legible regardless of what the current frame looks like. */}
+      <header className="story-topbar" onClick={(e) => e.stopPropagation()}>
+        <div id="mBrand">World Foresight Framework</div>
+        {!leaving ? (
+          <button className="story-skip" onClick={(event) => { event.stopPropagation(); finish(); }}>
+            <span>Skip story</span><ArrowIcon />
+          </button>
+        ) : null}
+      </header>
 
       {eras.map((e, i) => {
         const ch = chapters[e.chapter];
@@ -148,28 +152,11 @@ export default function Montage({ onFinish }) {
                   })}
                 </div>
               )}
-              {e.finale && (
-                <div className="finale-cta">
-                  <button className="btn on-dark" onClick={(ev) => { ev.stopPropagation(); finish(); }}>
-                    {story.finaleCtaLabel}
-                  </button>
-                </div>
-              )}
             </div>
           </div>
         );
       })}
 
-      <aside className="force-trace" aria-label="Forces connected to this event">
-        {forces.map((force) => {
-          const active = eras[idx].forces?.includes(force.id);
-          return (
-            <div key={force.id} className={`trace-force${active ? ' active' : ''}`} style={{ '--force': force.color }}>
-              <i /><span>{force.name}</span>
-            </div>
-          );
-        })}
-      </aside>
 
       <div className="story-controls" onClick={(e) => e.stopPropagation()}>
         <button onClick={back} disabled={idx === 0} aria-label="Previous story event">
@@ -190,10 +177,6 @@ export default function Montage({ onFinish }) {
         </button>
       </div>
       <div id="mHint" className={idx > 1 && interacted ? 'hide' : ''}>{story.advanceHint}</div>
-      <div className="framework-handoff" aria-hidden="true">
-        <i /><i /><i />
-        <div><span>WORLD</span><b>2040</b></div>
-      </div>
     </section>
   );
 }

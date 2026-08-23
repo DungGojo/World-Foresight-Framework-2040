@@ -1,0 +1,59 @@
+/* Rings-and-core handoff curtain. Geometry and orbit keyframes are the
+   original story-handoff values (formerly Montage.css's `.framework-handoff`),
+   now shared by both entrances and keyed off `--accent`. */
+.launch-handoff{
+  position:fixed;inset:0;z-index:200;display:grid;place-items:center;pointer-events:none;
+  opacity:0;background:var(--space);
+  /* Beat 1 — fade in, then hold. Deliberately has no self-timed fade-out:
+     if the curtain expired on its own clock it could uncover the *origin*
+     page while we were still on it. It only leaves via `.reveal` below,
+     which is applied in the same tick as navigate(). */
+  animation:launch-curtain-in .32s var(--ease) forwards;
+}
+/* Beat 2 — the zoom-out. By the time this runs the route has already
+   swapped underneath, so this uncovers the newly-arrived page. */
+.launch-handoff.reveal{
+  animation:launch-curtain-out .9s var(--ease) forwards;
+}
+.launch-handoff>i{
+  position:absolute;width:min(70vmin,740px);aspect-ratio:1;
+  border:1px solid rgba(247,242,233,.2);border-radius:50%;
+  transform:scale(.45);opacity:0;
+  animation:launch-orbit-a 1.7s .22s linear forwards;
+}
+.launch-handoff>i::after{
+  content:"";position:absolute;left:50%;top:-4px;width:7px;height:7px;border-radius:50%;
+  background:var(--accent);box-shadow:0 0 18px color-mix(in srgb,var(--accent) 70%,transparent);
+}
+.launch-handoff>i:nth-child(2){
+  width:min(50vmin,520px);border-color:color-mix(in srgb,var(--accent) 34%,transparent);
+  animation-name:launch-orbit-b;animation-duration:1.55s;
+}
+.launch-handoff>i:nth-child(3){
+  width:min(31vmin,330px);border-color:rgba(247,242,233,.28);
+  animation-name:launch-orbit-c;animation-duration:1.38s;
+}
+.launch-handoff>div{
+  width:176px;aspect-ratio:1;border:1px solid color-mix(in srgb,var(--accent) 72%,transparent);
+  border-radius:50%;display:grid;place-content:center;text-align:center;padding:0 14px;
+  transform:scale(.35);opacity:0;background:var(--space);
+  animation:launch-core 1.65s .12s var(--ease) forwards;
+}
+.launch-handoff span{font-size:9px;letter-spacing:.2em;color:rgba(247,242,233,.58);text-transform:uppercase}
+.launch-handoff b{
+  display:block;font-family:var(--serif);font-weight:400;line-height:1.05;color:var(--accent);
+  font-size:var(--launch-title,26px);text-wrap:balance;
+}
+
+@keyframes launch-curtain-in{to{opacity:1}}
+@keyframes launch-curtain-out{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(3.35)}}
+@keyframes launch-orbit-a{0%{transform:scale(.45) rotate(0);opacity:0}18%{opacity:.55}100%{transform:scale(1) rotate(720deg);opacity:.28}}
+@keyframes launch-orbit-b{0%{transform:scale(.4) rotate(0);opacity:0}18%{opacity:.72}100%{transform:scale(1) rotate(-620deg);opacity:.34}}
+@keyframes launch-orbit-c{0%{transform:scale(.35) rotate(0);opacity:0}18%{opacity:.62}100%{transform:scale(1) rotate(540deg);opacity:.3}}
+@keyframes launch-core{0%{transform:scale(.35);opacity:0}24%,78%{transform:scale(1);opacity:1}100%{transform:scale(.92);opacity:.8}}
+
+@media (prefers-reduced-motion: reduce){
+  .launch-handoff,.launch-handoff.reveal,.launch-handoff>i,.launch-handoff>div{animation:none}
+  .launch-handoff{opacity:1}
+  .launch-handoff>i,.launch-handoff>div{transform:none;opacity:1}
+}

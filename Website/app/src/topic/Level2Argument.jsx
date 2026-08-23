@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import FigureBlock from './FigureBlock';
 import BehaviourCard from './BehaviourCard';
-import SourceGrid from './SourceGrid';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 
-export default function Level2Argument({ arg, accent }) {
+export default function Level2Argument({ arg, accent, topicId }) {
   const ref = useRef(null);
   const [shown, setShown] = useState(false);
   const reduce = useReducedMotion();
@@ -14,7 +13,11 @@ export default function Level2Argument({ arg, accent }) {
     const el = ref.current; if (!el) return;
     const io = new IntersectionObserver(
       (es) => es.forEach((e) => e.isIntersecting && setShown(true)),
-      { rootMargin: '0px 0px -12% 0px', threshold: 0.12 }
+      // Argument sections become several viewports tall on mobile. A 12%
+      // threshold can then exceed the viewport itself, so the reveal never
+      // fires. One percent still delays the reveal until the section arrives
+      // while remaining reachable at every screen size.
+      { rootMargin: '0px 0px -12% 0px', threshold: 0.01 }
     );
     io.observe(el);
     return () => io.disconnect();
@@ -31,7 +34,8 @@ export default function Level2Argument({ arg, accent }) {
 
       <div className="l2-figures">
         {arg.data.map((d, i) => (
-          <FigureBlock key={i} finding={d.finding} figure={d.figure} />
+          <FigureBlock key={i} topicId={topicId} finding={d.finding} figure={d.figure}
+                       sources={d.sources} accent={accent} />
         ))}
       </div>
 
@@ -44,7 +48,6 @@ export default function Level2Argument({ arg, accent }) {
         </div>
       )}
 
-      <SourceGrid sources={arg.sources} />
     </section>
   );
 }

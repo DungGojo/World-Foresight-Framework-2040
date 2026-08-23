@@ -1,50 +1,83 @@
+import { useResizeObserver } from '../hooks/useResizeObserver';
 import { palette } from '../theme';
 import './chart.css';
 
-// Arg 2 — two gauges on a West↔China spectrum: Security leans West, Economy leans China.
-// `lean` (0..100) = how strongly the needle points to `side`; the other half is the
-// opposite pole. Needle angle: PI (left = West) .. 0 (right = China).
-function Gauge({ title, side, lean, valueLabel }) {
-  const cx = 110, cy = 105, r = 82;
-  // fraction from China(0) → West(1). A West lean of 72 → 0.5 + 0.22 = 0.72 toward West.
-  const westFrac = side === 'West' ? 0.5 + (lean / 100) * 0.5 : 0.5 - (lean / 100) * 0.5;
-  const needleAng = Math.PI * westFrac; // 0.5→PI/2 (top), 1→PI (left/West), 0→0 (right/China)
-  const nx = cx - Math.cos(needleAng) * (r - 12); // minus: westFrac=1 → cos(PI)=-1 → nx=cx+ (right)… invert
-  // simpler: map westFrac to angle where West(1)=180°, China(0)=0°
-  const deg = 180 * westFrac;
-  const rad = (deg * Math.PI) / 180;
-  const tipX = cx - Math.cos(rad) * (r - 12);
-  const tipY = cy - Math.sin(rad) * (r - 12);
-  const arc = (a0, a1, color) => {
-    const x0 = cx + Math.cos(a0) * r, y0 = cy - Math.sin(a0) * r;
-    const x1 = cx + Math.cos(a1) * r, y1 = cy - Math.sin(a1) * r;
-    return <path d={`M${x0},${y0} A${r},${r} 0 0 1 ${x1},${y1}`} fill="none" stroke={color} strokeWidth={8} strokeLinecap="round" />;
+// Arg 3 — two gauges on a West↔China spectrum, each carrying both anchor years.
+// The finding is about divergence over time, so a single needle per dial cannot
+// make it: the ghost needle is the first year, the solid one the last, and the
+// wedge between them is the direction of travel.
+const W = 240, H = 168, CX = 120, CY = 124, R = 92;
+
+// frac 1 = West (the 9 o'clock end), 0.5 = top, 0 = China (3 o'clock).
+// x uses +cos so frac 1 lands left of the pivot; getting this sign wrong
+// mirrors the gauge and the two half-arcs cross instead of meeting at the top.
+const polar = (frac, radius) => {
+  const rad = Math.PI * frac;
+  return [CX + Math.cos(rad) * radius, CY - Math.sin(rad) * radius];
+};
+
+function arc(a0, a1, radius, color, width) {
+  const [x0, y0] = polar(a0, radius);
+  const [x1, y1] = polar(a1, radius);
+  return <path d={`M${x0},${y0} A${radius},${radius} 0 0 ${a0 > a1 ? 1 : 0} ${x1},${y1}`}
+               fill="none" stroke={color} strokeWidth={width} strokeLinecap="round" />;
+}
+
+function Gauge({ dial }) {
+  const frac = (i) => {
+    const total = dial.west[i] + dial.east[i];
+    return total > 0 ? dial.west[i] / total : 0.5;
   };
+  const from = frac(0), to = frac(dial.west.length - 1);
+  const accent = to >= 0.5 ? palette.power : palette.navy;
+  const [fx, fy] = polar(from, R - 16);
+  const [tx, ty] = polar(to, R - 16);
+
   return (
-    <div style={{ textAlign: 'center', flex: 1, minWidth: 220 }}>
-      <svg viewBox="0 0 220 132" style={{ width: '100%', maxWidth: 260, margin: '0 auto', display: 'block' }}>
-        {arc(Math.PI, Math.PI / 2, palette.power)}
-        {arc(Math.PI / 2, 0, palette.navy)}
-        <line x1={cx} y1={cy} x2={tipX} y2={tipY} stroke={palette.ink} strokeWidth={3} strokeLinecap="round" />
-        <circle cx={cx} cy={cy} r={5} fill={palette.ink} />
-        <text x={16} y={126} fontSize={10} fill={palette.power} fontWeight={600} style={{ letterSpacing: '.1em' }}>WEST</text>
-        <text x={204} y={126} fontSize={10} fill={palette.navy} fontWeight={600} textAnchor="end" style={{ letterSpacing: '.1em' }}>CHINA</text>
+    <div className="dial">
+      <svg viewBox={`0 0 ${W} ${H}`} role="img"
+           aria-label={`${dial.title}: ${dial.westLabel} versus ${dial.eastLabel}`}>
+        {arc(1, 0.5, R, palette.power, 8)}
+        {arc(0.5, 0, R, palette.navy, 8)}
+        {/* the wedge the needle travelled between the two years */}
+        {Math.abs(to - from) > 0.004 && (
+          <path d={`M${CX},${CY} L${fx},${fy} A${R - 16},${R - 16} 0 0 ${from > to ? 1 : 0} ${tx},${ty} Z`}
+                fill={accent} opacity={0.22} />
+        )}
+        <line x1={CX} y1={CY} x2={fx} y2={fy} stroke={palette.muted} strokeWidth={2}
+              strokeDasharray="3 3" strokeLinecap="round" />
+        <line x1={CX} y1={CY} x2={tx} y2={ty} stroke={palette.ink} strokeWidth={3.5}
+              strokeLinecap="round" />
+        <circle cx={CX} cy={CY} r={5.5} fill={palette.ink} />
+        <text x={6} y={CY + 22} className="dial-pole" fill={palette.power}>
+          {dial.westLabel.toUpperCase()}
+        </text>
+        <text x={W - 6} y={CY + 22} textAnchor="end" className="dial-pole" fill={palette.navy}>
+          {dial.eastLabel.toUpperCase()}
+        </text>
       </svg>
-      <div style={{ fontFamily: 'var(--serif)', fontWeight: 600, fontSize: '1.05rem', marginTop: 4 }}>{title}</div>
-      <div style={{ color: palette.muted, fontSize: 12.5, marginTop: 2, maxWidth: 260, marginInline: 'auto' }}>{valueLabel}</div>
+
+      <div className="dial-title">{dial.title}</div>
+      <div className="dial-readout">
+        <span><i style={{ background: palette.power }} />{dial.westLabel}</span>
+        <b>{dial.west[0]}% <em>→</em> {dial.west[dial.west.length - 1]}%</b>
+        <span><i style={{ background: palette.navy }} />{dial.eastLabel}</span>
+        <b>{dial.east[0]}% <em>→</em> {dial.east[dial.east.length - 1]}%</b>
+      </div>
     </div>
   );
 }
 
 export default function IssueDials({ fig }) {
-  if (!fig) return <div className="chart"><div className="chart-empty">Data unavailable.</div></div>;
+  const [ref] = useResizeObserver();
+  if (!fig?.dials?.length) {
+    return <div className="chart"><div className="chart-empty">Data unavailable.</div></div>;
+  }
   return (
-    <div className="chart">
-      <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-        <Gauge title="Security" side="West" lean={fig.security.value} valueLabel={fig.security.label} />
-        <Gauge title="Economy" side="China" lean={fig.economy.value} valueLabel={fig.economy.label} />
+    <div className="chart" ref={ref}>
+      <div className="dial-row">
+        {fig.dials.map((d) => <Gauge key={d.key} dial={d} />)}
       </div>
-      <div className="chart-legend"><span className="annot-note" style={{ color: palette.muted, fontSize: 12 }}>{fig.netAlignment.label} ({fig.netAlignment.from} → {fig.netAlignment.to}).</span></div>
     </div>
   );
 }

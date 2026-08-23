@@ -11,7 +11,7 @@
 .framework-hero{position:relative;min-height:650px;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(420px,.92fr);align-items:center;gap:7vw;padding-top:70px;padding-bottom:78px}
 .framework-copy h1{font-family:var(--serif);font-weight:400;font-size:clamp(48px,6vw,90px);line-height:.98;letter-spacing:-.045em;max-width:10ch;text-wrap:balance}
 .framework-copy>p{margin-top:30px;max-width:57ch;font-size:clamp(15px,1.4vw,19px);line-height:1.75;color:rgba(247,242,233,.7)}
-.framework-cta{margin-top:34px;display:inline-flex;align-items:center;gap:28px;color:#f7f2e9;border-bottom:1px solid rgba(247,242,233,.5);padding:12px 0;font-size:13px;font-weight:600}
+.framework-actions{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin-top:34px}.framework-cta{display:inline-flex;align-items:center;gap:28px;color:#f7f2e9;border-bottom:1px solid rgba(247,242,233,.5);padding:12px 0;font-size:13px;font-weight:600;background:none;border-top:0;border-left:0;border-right:0;cursor:pointer}.framework-cta:hover{border-bottom-color:#f7f2e9}.framework-cta.primary{color:#d8c4a2;border-bottom-color:rgba(216,196,162,.6)}.framework-cta.primary:hover{border-bottom-color:#d8c4a2}
 .scope-graphic{position:relative;aspect-ratio:1;max-width:560px;width:100%;margin:auto;display:grid;place-items:center}
 .scope-rings,.scope-rings i{position:absolute;inset:0;border:1px solid rgba(247,242,233,.14);border-radius:50%}
 .scope-rings{animation:scope-orbit 26s linear infinite;will-change:transform}
@@ -38,57 +38,171 @@
 .country-atlas{padding-top:78px}.country-atlas-heading{padding-top:52px}
 .region-list{border-top:1px solid rgba(247,242,233,.13)}
 .region-row{display:grid;grid-template-columns:minmax(185px,.34fr) minmax(0,1fr);gap:32px;padding:23px 0;border-bottom:1px solid rgba(247,242,233,.13)}
-.region-row>header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-right:20px}.region-row h3{font-family:var(--serif);font-size:19px;font-weight:400}.region-row header span{font-size:10px;color:rgba(247,242,233,.36)}
+.region-row>header{display:flex;align-items:center;gap:14px;padding-right:20px}.region-row h3{font-family:var(--serif);font-size:19px;font-weight:400}
 .region-countries{display:flex;align-items:center;flex-wrap:wrap;gap:12px 21px}
 .country-token{display:inline-flex;align-items:center;gap:9px;min-width:118px;color:rgba(247,242,233,.72);font-size:12px}
 .country-token img{width:29px;height:29px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1px rgba(255,255,255,.18)}
 
 .methodology{padding-top:78px}.method-strip{position:relative;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(247,242,233,.13);padding-top:35px}
-.method-step{position:relative;padding:0 38px 0 0;min-height:180px}.method-step>span{font-family:var(--serif);font-size:14px;color:#d8c4a2}.method-step h3{margin-top:20px;font-family:var(--serif);font-weight:400;font-size:20px}.method-step p{margin-top:10px;color:rgba(247,242,233,.54);font-size:12px;line-height:1.65}.method-step>.arrow-icon{position:absolute;right:16px;top:44%;color:rgba(247,242,233,.25)}
-.framework-next{position:relative;margin-top:82px;padding-top:54px;padding-bottom:54px;border-top:1px solid rgba(247,242,233,.2);border-bottom:1px solid rgba(247,242,233,.2);display:grid;grid-template-columns:1fr auto;gap:50px;align-items:end}
-.framework-next h2{font-family:var(--serif);font-size:clamp(31px,3.2vw,48px);font-weight:400;line-height:1.08;letter-spacing:-.03em}.framework-next p{margin-top:18px;color:rgba(247,242,233,.58);font-size:13px;line-height:1.65}
-.framework-next button{display:flex;align-items:center;gap:34px;padding:17px 18px;background:#f7f2e9;color:var(--space);font-size:12px;font-weight:600;min-width:220px;justify-content:space-between}
+.method-step{position:relative;padding:0 38px 0 0;min-height:180px}.method-step>span{font-family:var(--serif);font-size:14px;color:#d8c4a2}.method-step h3{margin-top:20px;font-family:var(--serif);font-weight:400;font-size:20px}.method-step p{margin-top:10px;color:rgba(247,242,233,.54);font-size:12px;line-height:1.65}.method-step>.arrow-icon{position:absolute;right:16px;top:44%;color:#f7f2e9;opacity:.9}
 
 .forces-page .hub-header{background:var(--bg)}
 .forces-section{min-height:calc(100vh - var(--header-h));scroll-margin-top:var(--header-h);padding:50px 0 70px;background:var(--bg)}
 .forces-heading{display:grid;grid-template-columns:1fr 1fr;align-items:end;gap:8vw;border-bottom:1px solid var(--line);padding-bottom:24px}
 .forces-heading h1{font-family:var(--serif);font-size:clamp(46px,4.5vw,72px);font-weight:400;line-height:.96;letter-spacing:-.045em}
 .forces-heading p{max-width:58ch;color:var(--muted);line-height:1.75;font-size:15px;padding-bottom:5px}
-.systems-map{display:grid;grid-template-columns:minmax(170px,.72fr) minmax(430px,1.45fr) minmax(250px,.85fr);gap:clamp(24px,4vw,64px);align-items:center;min-height:560px;padding:24px 0}
-.systems-controls{align-self:start;padding-top:40px}.connect-toggle{display:flex;align-items:center;gap:14px;font-size:12px;font-weight:600;padding:12px 0;border-bottom:1px solid var(--line)}
-.connect-toggle i{position:relative;width:36px;height:20px}.connect-toggle i span{position:absolute;width:18px;height:18px;border:1px solid currentColor;border-radius:50%}.connect-toggle i span:last-child{left:12px}
-.connect-toggle.active{color:var(--power)}.systems-controls p{margin-top:16px;color:var(--muted);font-size:12px;line-height:1.6;max-width:23ch}
-.systems-canvas{position:relative;aspect-ratio:1;width:100%;max-width:650px;margin:auto}
-.systems-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible}.systems-lines circle,.systems-lines line{fill:none;stroke:#b9b0a1;stroke-width:.22;vector-effect:non-scaling-stroke;stroke-dasharray:2 4}.systems-lines .selected-connection{stroke:var(--ink);stroke-width:1.2;stroke-dasharray:none}
-.world-node{position:absolute;left:50%;top:49%;transform:translate(-50%,-50%);width:31%;aspect-ratio:1;border:1px solid #ada494;border-radius:50%;display:grid;place-content:center;text-align:center;background:radial-gradient(circle at 38% 32%,rgba(255,255,255,.88),rgba(244,239,230,.3)),var(--bg);box-shadow:0 0 0 12px rgba(244,239,230,.75);transition:box-shadow .35s var(--ease),border-color .35s var(--ease)}
-.world-node.connected{border-color:var(--ink);box-shadow:0 0 0 12px rgba(244,239,230,.82),0 12px 40px rgba(17,25,31,.12)}
-.world-node span{font-size:10px;letter-spacing:.2em}.world-node b{font-family:var(--serif);font-size:clamp(26px,3vw,44px);font-weight:400;line-height:1}
+.systems-map{display:grid;grid-template-columns:minmax(560px,1.15fr) minmax(440px,1fr);gap:clamp(28px,3.5vw,56px);align-items:start;min-height:0;padding:44px 0 24px}
+/* Controls + diagram share this column so the detail panel opposite gets most
+   of the width — long combination headlines and the grounding text are what
+   actually need the room, not the diagram. */
+.systems-left{display:flex;flex-wrap:nowrap;align-items:center;justify-content:center;gap:clamp(18px,2.6vw,32px)}
+.systems-controls{flex:0 0 auto;align-self:center;max-width:168px}
+.systems-heading{font-family:var(--serif);font-size:19px;font-weight:400;line-height:1.35;
+  color:var(--ink);max-width:23ch}
+.systems-clear{margin-top:16px;padding:0;background:none;border:0;cursor:pointer;
+  font-family:var(--sans);font-size:11px;letter-spacing:.02em;color:var(--muted);
+  text-decoration:underline;text-underline-offset:3px;transition:color .2s var(--ease)}
+.systems-clear:hover{color:var(--ink)}
+.systems-canvas{position:relative;aspect-ratio:1;width:100%;max-width:480px;flex:1 1 340px;margin:auto}
+.systems-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.systems-lines circle{fill:none;stroke:#b9b0a1;stroke-width:.22;vector-effect:non-scaling-stroke;stroke-dasharray:2 4}
+/* the dashed rings turn slowly so the map is never completely static */
+.orbit-rings{transform-box:view-box;transform-origin:50px 49px;animation:orbit-spin 90s linear infinite}
+.orbit-rings.reverse{animation-duration:130s;animation-direction:reverse}
+@keyframes orbit-spin{to{transform:rotate(360deg)}}
+
+/* A spoke draws from its force to the centre, then holds. */
+.systems-lines .spoke{fill:none;stroke:var(--spoke);stroke-width:2;vector-effect:non-scaling-stroke;stroke-linecap:round}
+.systems-lines .spoke.travelling{stroke-dasharray:1;stroke-dashoffset:1;
+  animation:spoke-travel var(--travel) cubic-bezier(.33,.1,.28,1) forwards}
+.systems-lines .spoke.landed{stroke-dasharray:none;stroke-dashoffset:0}
+@keyframes spoke-travel{to{stroke-dashoffset:0}}
+.world-node{position:absolute;left:50%;top:49%;transform:translate(-50%,-50%);width:34%;aspect-ratio:1;z-index:1}
+
+/* Rotating Earth at the centre */
+.centre-globe{position:relative;width:100%;height:100%;display:grid;place-items:center}
+.globe-body{position:absolute;inset:0;border-radius:50%;overflow:hidden;background:#0a1420;
+  box-shadow:0 0 0 1px rgba(17,25,31,.18),0 18px 46px rgba(10,20,32,.28)}
+/* the texture is 2:1 equirectangular, laid twice side by side and slid one full
+   tile, so the loop is seamless */
+.globe-tex{position:absolute;top:0;bottom:0;left:0;width:200%;
+  background-size:50% 100%;background-repeat:repeat-x;
+  animation:globe-spin 48s linear infinite}
+@keyframes globe-spin{to{transform:translateX(-50%)}}
+/* sphere falloff plus a day/night terminator, so a flat strip reads as round */
+.globe-shade{position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.34),rgba(255,255,255,0) 46%),
+    radial-gradient(circle at 50% 50%,rgba(3,8,14,0) 52%,rgba(3,8,14,.55) 78%,rgba(3,8,14,.9) 100%),
+    linear-gradient(102deg,rgba(3,8,14,0) 38%,rgba(3,8,14,.62) 82%)}
+/* keeps the label legible over any part of the texture */
+.globe-scrim{position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(ellipse 62% 34% at 50% 50%,rgba(6,14,22,.66) 0%,rgba(6,14,22,.34) 55%,rgba(6,14,22,0) 100%)}
+.globe-label{position:relative;z-index:3;text-align:center;color:#f7f2e9;pointer-events:none;
+  text-shadow:0 2px 14px rgba(3,8,14,.85),0 0 30px rgba(3,8,14,.6)}
+.globe-label span{display:block;font-family:var(--sans);font-size:10px;letter-spacing:.22em;
+  color:rgba(247,242,233,.82)}
+.globe-label b{display:block;font-family:var(--serif);font-size:clamp(28px,3.2vw,46px);font-weight:400;line-height:1}
+
+/* One halo per connected force; two forces read as two rings. */
+.globe-halo{position:absolute;border-radius:50%;pointer-events:none;
+  inset:calc(-9px - var(--halo-i) * 10px);
+  border:2.5px solid var(--halo);opacity:.9;
+  box-shadow:0 0 22px -4px var(--halo),inset 0 0 18px -8px var(--halo);
+  animation:halo-in .55s var(--ease) both}
+@keyframes halo-in{from{opacity:0;transform:scale(.94)}to{opacity:.9;transform:scale(1)}}
+/* and a pulse leaving the globe in the same colour */
+.globe-pulse{position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  border:2px solid var(--halo);
+  animation:globe-pulse 3.4s cubic-bezier(.2,.6,.3,1) infinite;
+  animation-delay:calc(var(--halo-i) * .9s)}
+@keyframes globe-pulse{
+  0%{opacity:.5;transform:scale(1)}
+  70%{opacity:0;transform:scale(1.5)}
+  100%{opacity:0;transform:scale(1.5)}}
+
 .system-node{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);color:var(--accent);display:flex;flex-direction:column;align-items:center;gap:8px;z-index:2;transition:transform .35s var(--ease)}
-.system-node-icon{width:72px;aspect-ratio:1;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;background:var(--bg);box-shadow:0 0 0 7px var(--bg),0 10px 28px rgba(17,25,31,.08);transition:background .3s var(--ease),color .3s var(--ease),box-shadow .3s var(--ease)}
-.system-node-icon svg{width:31px;height:31px}.system-node b{font-family:var(--serif);font-size:20px;font-weight:400}
-.system-node:hover,.system-node.active,.system-node.paired{transform:translate(-50%,-50%) scale(1.08)}
-.system-node.active .system-node-icon,.system-node.paired .system-node-icon{background:var(--accent);color:#fff;box-shadow:0 0 0 7px var(--bg),0 12px 34px color-mix(in srgb,var(--accent) 24%,transparent)}
+.system-node-icon{width:78px;aspect-ratio:1;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;background:var(--bg);box-shadow:0 0 0 7px var(--bg),0 10px 28px rgba(17,25,31,.08);transition:background .3s var(--ease),color .3s var(--ease),box-shadow .3s var(--ease)}
+.system-node-icon svg{width:32px;height:32px;position:relative;z-index:2}.system-node b{font-family:var(--serif);font-size:19px;font-weight:400}
+.system-node{cursor:pointer;background:none;border:0;padding:0}.system-node:hover,.system-node.active{transform:translate(-50%,-50%) scale(1.08)}.system-node:not(.active) .system-node-icon{border-style:dashed;opacity:.78}.system-node:not(.active):hover .system-node-icon{border-style:solid;opacity:1}.system-node.dim{opacity:.32}.system-node.dim:hover{opacity:.7}
+.system-node.active .system-node-icon{background:var(--accent);color:#fff;box-shadow:0 0 0 7px var(--bg),0 12px 34px color-mix(in srgb,var(--accent) 24%,transparent)}.system-node-icon{position:relative}
+/* signals which force is currently being explored */
+.node-wave{position:absolute;inset:-2px;border-radius:50%;pointer-events:none;
+  border:1.5px solid var(--accent);
+  animation:node-wave 2.6s cubic-bezier(.2,.6,.3,1) infinite}
+.node-wave.delay{animation-delay:1.3s}
+@keyframes node-wave{
+  0%{opacity:.65;transform:scale(1)}
+  75%{opacity:0;transform:scale(1.85)}
+  100%{opacity:0;transform:scale(1.85)}}.system-node-order{position:absolute;top:-4px;right:-4px;display:grid;place-items:center;width:21px;height:21px;border-radius:50%;background:var(--ink);color:var(--paper);font-family:var(--sans);font-size:11px;font-style:normal;font-weight:700;box-shadow:0 0 0 3px var(--bg)}
 .systems-detail{border-left:1px solid var(--line);padding-left:34px;min-height:440px;display:flex;flex-direction:column;justify-content:center}
 .detail-label{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:600}.systems-detail h3{font-family:var(--serif);font-weight:400;font-size:44px;color:var(--accent);margin-top:12px}.systems-detail>p{margin-top:14px;color:var(--muted);font-size:13px;line-height:1.65}.systems-detail .detail-question{font-family:var(--serif);font-size:18px;color:var(--ink);line-height:1.45}
-.systems-detail ul{list-style:none;margin-top:26px;border-top:1px solid var(--line)}.systems-detail li{padding:11px 0;border-bottom:1px solid var(--line);font-size:12px}
-.detail-open{margin-top:25px;display:flex;align-items:center;justify-content:space-between;gap:18px;background:var(--ink);color:var(--paper);padding:14px 16px;font-size:12px;font-weight:600}.detail-data{margin-top:16px;display:flex;align-items:center;gap:10px;font-size:11px;color:var(--muted)}.detail-data .arrow-icon{width:16px}
-.detail-pair{display:flex;gap:12px;margin-top:13px;font-family:var(--serif);font-size:18px}.detail-pair span+span::before{content:"\00d7";color:var(--muted);margin-right:12px}.detail-reset{margin-top:26px;color:var(--muted);font-size:11px;text-align:left;text-decoration:underline;text-underline-offset:5px}
+.systems-detail h3.detail-waiting{color:var(--muted)}.detail-block{margin-top:22px}.detail-block>span{display:block;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:7px}.detail-block p{color:var(--muted);font-size:12.5px;line-height:1.68}.detail-block p.detail-question{font-family:var(--serif);font-size:18px;color:var(--ink);line-height:1.45}.detail-actions{display:grid;gap:9px;margin-top:26px}
+.detail-open{display:flex;align-items:center;justify-content:space-between;gap:18px;width:100%;text-align:left;background:transparent;color:var(--ink);padding:14px 16px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--ink)}.detail-open:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+/* Same cell as 'Explore <force>', held back a step: the data is a sideways
+   move out of the framework rather than the next step through it. */
+.detail-open.data{margin-top:26px;background:transparent;color:var(--muted);border-color:var(--line)}
+.detail-actions+.detail-open.data{margin-top:9px}
+.detail-open.data:hover{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+
+/* Progressive-disclosure grounding: the pipeline finding and the real-world
+   evidence behind a combination's headline, collapsed by default so the panel
+   stays scannable — expand to see the data. */
+.detail-grounding{margin-top:18px}
+.detail-grounding-toggle{padding:0;background:none;border:0;cursor:pointer;
+  font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.02em;color:var(--accent);
+  text-decoration:underline;text-underline-offset:3px;transition:opacity .15s var(--ease)}
+.detail-grounding-toggle:hover{opacity:.72}
+.detail-grounding-body{margin-top:14px;padding-left:14px;border-left:2px solid var(--line)}
+.dg-line{font-size:12px;line-height:1.68;color:var(--muted)}
+.dg-line+.dg-line{margin-top:20px}
+.dg-lbl{display:block;margin-bottom:7px;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+
+/* Early signals — the primary documents behind a combination, one cell each.
+   Deliberately small: they are receipts for the line above, not the argument. */
+.dg-signals{display:grid;gap:1px;margin-top:12px;background:var(--line);border:1px solid var(--line)}
+.dg-signal{display:grid;grid-template-columns:1fr 16px;align-items:center;gap:4px 12px;
+  padding:11px 13px;background:var(--paper);color:var(--ink);
+  transition:background .2s var(--ease),color .2s var(--ease)}
+.dg-signal:hover{background:var(--ink);color:var(--paper)}
+.dgs-meta{grid-column:1;font-size:8.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--accent)}
+.dg-signal:hover .dgs-meta{color:#fff}
+.dg-signal strong{grid-column:1;font-family:var(--serif);font-size:13.5px;font-weight:400;line-height:1.34}
+.dg-signal .arrow-icon{grid-column:2;grid-row:1/3;width:16px;color:var(--muted);flex:none}
+.dg-signal:hover .arrow-icon{color:var(--paper)}
+
+.detail-pair{display:flex;align-items:center;gap:10px;margin-top:13px;font-family:var(--serif);font-size:19px}.detail-pair em{font-style:normal;color:var(--muted);font-size:15px}
+.detail-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
+.detail-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px 5px 8px;
+  border:1px solid color-mix(in srgb,var(--chip) 45%,var(--line));border-radius:20px;
+  font-family:var(--sans);font-size:11.5px;font-weight:600;color:var(--ink);
+  background:color-mix(in srgb,var(--chip) 10%,var(--paper))}
+.detail-chip i{width:7px;height:7px;border-radius:50%;background:var(--chip);flex:none}
+
 @keyframes scope-orbit{to{transform:rotate(360deg)}}
 
-.story-arrival .hub-header{animation:framework-appear .45s .18s var(--ease) both}
-.story-arrival .framework-copy h1{animation:framework-rise .62s .68s var(--ease) both}
-.story-arrival .framework-copy>p{animation:framework-rise .62s .96s var(--ease) both}
-.story-arrival .framework-cta{animation:framework-rise .58s 1.14s var(--ease) both}
-.story-arrival .scope-graphic{animation:framework-rise .7s 1.25s var(--ease) both}
+.story-arrival .hub-header{animation:framework-appear .5s .1s var(--ease) both}
+/* The headline gets the "pop" beat the handoff curtain hands off to — a
+   quick overshoot-scale rather than a flat rise, so it reads as the thing
+   the zoom was carrying in. Everything else settles in around it normally. */
+.story-arrival .framework-copy h1{animation:framework-pop .66s .4s cubic-bezier(.34,1.56,.64,1) both}
+.story-arrival .framework-copy>p{animation:framework-rise .62s .72s var(--ease) both}
+.story-arrival .framework-actions{animation:framework-rise .58s .88s var(--ease) both}
+.story-arrival .scope-graphic{animation:framework-rise .7s .98s var(--ease) both}
 @keyframes framework-appear{from{opacity:0}}
 @keyframes framework-rise{from{opacity:0;transform:translateY(18px)}}
+@keyframes framework-pop{from{opacity:0;transform:scale(.92) translateY(18px)}to{opacity:1;transform:none}}
 
 @media (max-width:1100px){
-  .framework-hero{grid-template-columns:1fr .75fr}.systems-map{grid-template-columns:180px 1fr}.systems-detail{grid-column:1/-1;min-height:0;border-left:0;border-top:1px solid var(--line);padding:34px 0;display:grid;grid-template-columns:1fr 1fr;gap:0 36px}.systems-detail .detail-open,.systems-detail .detail-data,.systems-detail .detail-reset{width:max-content}.systems-detail ul{grid-column:2;grid-row:1/5;margin-top:0}
+  .framework-hero{grid-template-columns:1fr .75fr}.systems-map{grid-template-columns:1fr}.systems-left{width:100%;max-width:640px;margin:0 auto}.systems-detail{min-height:0;border-left:0;border-top:1px solid var(--line);padding:34px 0;display:grid;grid-template-columns:1fr 1fr;gap:0 36px}.systems-detail .detail-open.data{width:max-content}.systems-detail .detail-actions{grid-column:2;align-self:start}
 }
 @media (max-width:800px){
-  .framework-hero{grid-template-columns:1fr;padding-top:70px}.scope-graphic{max-width:430px}.section-heading,.forces-heading{grid-template-columns:1fr}.section-heading>span,.section-heading>div+span{justify-self:start}.why-force-row{grid-template-columns:30px 52px 1fr}.why-force-row>div{grid-column:2/-1}.region-row{grid-template-columns:1fr}.region-row>header{justify-content:flex-start}.method-strip{grid-template-columns:1fr 1fr;gap:34px}.framework-next{grid-template-columns:1fr}.framework-next button{width:max-content}.systems-map{grid-template-columns:1fr;min-height:0}.systems-controls{padding-top:0}.systems-controls p{max-width:none}.systems-canvas{max-width:560px}.systems-detail{display:flex;grid-column:auto}
+  .framework-hero{grid-template-columns:1fr;padding-top:70px}.scope-graphic{max-width:430px}.section-heading,.forces-heading{grid-template-columns:1fr}.section-heading>span,.section-heading>div+span{justify-self:start}.why-force-row{grid-template-columns:30px 52px 1fr}.why-force-row>div{grid-column:2/-1}.region-row{grid-template-columns:1fr}.region-row>header{justify-content:flex-start}.method-strip{grid-template-columns:1fr 1fr;gap:34px}.systems-left{flex-direction:column}.systems-controls{max-width:none;text-align:center}.systems-controls p{max-width:none}.systems-canvas{max-width:420px;margin-top:36px}.systems-detail{display:flex;grid-column:auto}
 }
 @media (max-width:540px){
-  .framework-intro{padding-bottom:50px}.framework-hero{min-height:0}.framework-copy h1{font-size:50px}.scope-stat{padding:6px}.scope-stat b{font-size:18px}.scope-core{width:118px;height:118px}.scope-core b{font-size:46px}.section-heading{padding-top:40px}.why-force-row{gap:13px}.why-force-row h3{font-size:21px}.country-atlas,.methodology{padding-top:55px}.country-token{min-width:132px}.method-strip{grid-template-columns:1fr}.method-step{min-height:0;padding-bottom:26px;border-bottom:1px solid rgba(247,242,233,.13)}.method-step>.arrow-icon{display:none}.framework-next{margin-top:58px}.forces-section{padding-top:70px}.forces-heading h1{font-size:50px}.systems-canvas{margin-block:25px}.system-node-icon{width:54px}.system-node-icon svg{width:24px}.system-node b{font-size:15px}.systems-detail h3{font-size:38px}
+  .framework-intro{padding-bottom:50px}.framework-hero{min-height:0}.framework-copy h1{font-size:50px}.scope-stat{padding:6px}.scope-stat b{font-size:18px}.scope-core{width:118px;height:118px}.scope-core b{font-size:46px}.section-heading{padding-top:40px}.why-force-row{gap:13px}.why-force-row h3{font-size:21px}.country-atlas,.methodology{padding-top:55px}.country-token{min-width:132px}.method-strip{grid-template-columns:1fr}.method-step{min-height:0;padding-bottom:26px;border-bottom:1px solid rgba(247,242,233,.13)}.method-step>.arrow-icon{display:none}.forces-section{padding-top:70px}.forces-heading h1{font-size:50px}.systems-canvas{margin-block:25px}.system-node-icon{width:54px}.system-node-icon svg{width:24px}.system-node b{font-size:15px}.systems-detail h3{font-size:38px}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .orbit-rings,.globe-tex,.globe-pulse,.node-wave{animation:none}
+  .systems-lines .spoke.travelling{stroke-dasharray:none;stroke-dashoffset:0;animation:none}
 }

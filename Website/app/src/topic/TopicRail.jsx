@@ -1,14 +1,18 @@
 import ForceGlyph from '../components/ForceGlyph';
 import ArrowIcon from '../components/ArrowIcon';
 
-export default function TopicRail({ forces, currentId, onOpen }) {
-  const items = forces.filter((force) => force.id !== currentId);
+export default function TopicRail({
+  forces, currentId, onOpen, theme = 'dark',
+  title = 'Explore another force',
+  subtitle = null,
+}) {
+  const items = currentId ? forces.filter((force) => force.id !== currentId) : forces;
   const loop = [...items, ...items];
   return (
-    <section className="topic-rail" aria-labelledby="topic-rail-title">
-      <div className="topic-rail-head">
-        <h2 id="topic-rail-title">Explore another force</h2>
-        <p>The future becomes clearer when the topics are read together.</p>
+    <section className={`topic-rail${theme === 'light' ? ' light' : ''}`} aria-labelledby="topic-rail-title">
+      <div className={`topic-rail-head${subtitle ? '' : ' solo'}`}>
+        <h2 id="topic-rail-title">{title}</h2>
+        {subtitle ? <p>{subtitle}</p> : null}
       </div>
       <div className="topic-rail-window">
         <div className="topic-rail-track">

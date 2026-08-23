@@ -1,9 +1,11 @@
 import { CHARTS } from '../charts';
-import figures from '../data/power-figures.json';
+import { getFigure } from '../data/figures';
+import FindingSources from './FindingSources';
 
-export default function FigureBlock({ finding, figure }) {
+export default function FigureBlock({ topicId, finding, figure, sources, accent }) {
   const Chart = CHARTS[figure.type];
-  const fig = figures[figure.dataKey];
+  // `figure.from` lets an argument pull a figure from another figure set.
+  const fig = getFigure(figure.from || topicId, figure.dataKey);
   const unavailable = !Chart || !fig || fig.unavailable;
 
   return (
@@ -12,9 +14,11 @@ export default function FigureBlock({ finding, figure }) {
         <p className="finding">{finding}</p>
       </figcaption>
       <div className="figure-chart">
-        {unavailable ? <div className="chart-empty">Data unavailable — {figure.caption}</div> : <Chart fig={fig} />}
+        {unavailable
+          ? <div className="chart-empty">Data unavailable.</div>
+          : <Chart fig={fig} accent={accent} />}
       </div>
-      <p className="figure-note">{figure.caption} Historical evidence and framework projections; full provenance is documented in methodology.</p>
+      <FindingSources sources={sources} accent={accent} />
     </figure>
   );
 }

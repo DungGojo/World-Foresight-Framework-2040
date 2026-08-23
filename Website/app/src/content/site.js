@@ -1,21 +1,21 @@
 // Site-wide content: ported from Part 1's content.js (build spec §9).
-// site.json is the Part 1 source of truth (intro + montage + palette + combos).
+// site.json is the Part 1 source of truth (intro + montage + palette). Force-
+// combination copy (`combinations.js`) is a separate, actively maintained module.
 import site from './site.json';
+import { topicModules } from './topics';
+export { combination } from './combinations';
 
 export const palette = site.palette;
-export const typography = site.typography;
 export const intro = site.intro;
 export const montage = site.montage;
 export const earthTextures = site.earthTextures;
-export const constellationCopy = site.constellation;
-export const combos = site.combos;
-export const insightsBar = site.insightsBar;
 
-// ---- Force registry (hub sidebar + constellation + ambient background) ----
-// Power is the first LIVE topic; the others light up later with no layout change
-// (just flip `live` + add a content module + ambient images).
-// `ambient` lists image files expected in public/assets/topics/<id>/ambient/.
-// Empty/missing files fall back to the accent gradient (build spec §6.1).
+// ---- Force registry (hub ambient background) ----
+// All five topics are live. `ambient` lists image files expected in
+// public/assets/topics/<id>/ambient/. Only Power has real imagery so far; the
+// others list placeholder filenames that do not exist yet, and Level1Hero
+// probes each image before showing it, so those heroes fall back cleanly to the
+// accent gradient rather than breaking (build spec s.6.1).
 const AMBIENT = {
   power:   [
     'assets/montage/17-trinity.jpg',
@@ -31,38 +31,41 @@ const AMBIENT = {
 
 export const forces = site.topics.map((t) => ({
   ...t,
-  live: t.id === 'power',
+  // A topic is live exactly when it has a content module — no separate gate to
+  // forget. (site.json's `status` field is inert and read by nothing.)
+  live: topicModules[t.id] != null,
   href: `/topic/${t.id}`,
   ambient: (AMBIENT[t.id] || []).map((f) => f.startsWith('assets/') ? f : `assets/topics/${t.id}/ambient/${f}`),
 }));
 
 export const forceById = Object.fromEntries(forces.map((f) => [f.id, f]));
 
-export function comboTitle(aId, bId) {
-  return combos[[aId, bId].sort().join('|')];
-}
-
 const STORY_CHAPTERS = [
-  { label: 'Chapter 00', name: 'Before us', dur: 4200 },
-  { label: 'Chapter 01', name: 'We organize', dur: 4200 },
-  { label: 'Chapter 02', name: 'We connect', dur: 4400 },
-  { label: 'Chapter 03', name: 'We divide and rebuild', dur: 4400 },
-  { label: 'Chapter 04', name: 'One planetary system', dur: 4600 },
-  { label: 'Epilogue', name: 'The next chapter', dur: 12000 },
+  { label: 'Chapter 00', name: 'Before us', dur: 3000 },
+  { label: 'Chapter 01', name: 'We organize', dur: 3000 },
+  { label: 'Chapter 02', name: 'We connect', dur: 3000 },
+  { label: 'Chapter 03', name: 'We divide and rebuild', dur: 3000 },
+  { label: 'Chapter 04', name: 'One planetary system', dur: 3000 },
+  { label: 'Epilogue', name: 'The next chapter', dur: 7000 },
 ];
 
+// A seven-beat overview rather than a full chronology: one frame per chapter,
+// plus a second frame for the present. 3s a frame with a longer hold on the
+// closing question — 25s in total.
+// [era index in site.json, chapter index, duration ms]
 const STORY_SELECTION = [
-  [0, 0], [1, 0], [3, 0],
-  [4, 1], [5, 1], [6, 1],
-  [7, 2], [8, 2], [10, 2], [11, 2], [12, 2],
-  [13, 3], [16, 3], [17, 3], [18, 3], [20, 3],
-  [21, 4], [22, 4], [24, 4], [25, 4], [27, 4],
-  [28, 5],
+  [3, 0, 3000],    // We arrive — 300,000 years ago
+  [5, 1, 3000],    // We record — the first states
+  [11, 2, 3000],   // The engine age — industrial acceleration
+  [16, 3, 3000],   // The atomic age — a new scale of power
+  [22, 4, 3000],   // Everyone, connected
+  [27, 4, 3000],   // Now — five forces in motion
+  [28, 5, 7000],   // What will the world look like in 2040?
 ];
 
 export const story = {
   ...site.montage,
   chapters: STORY_CHAPTERS,
-  eras: STORY_SELECTION.map(([index, chapter]) => ({ ...site.montage.eras[index], chapter })),
+  eras: STORY_SELECTION.map(([index, chapter, dur]) => ({ ...site.montage.eras[index], chapter, dur })),
   advanceHint: '← → to move through the story',
 };

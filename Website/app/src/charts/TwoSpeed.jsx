@@ -1,43 +1,110 @@
+import { scaleLinear, line as d3line } from 'd3';
+import { useResizeObserver } from '../hooks/useResizeObserver';
 import { palette } from '../theme';
 import './chart.css';
 
-// Arg 3 — split panel: on paper the treaties hold (flat/rising); in practice
-// collective muscle fades (peacekeeping steeply down).
-export default function TwoSpeed({ fig }) {
-  if (!fig) return <div className="chart"><div className="chart-empty">Data unavailable.</div></div>;
-  const W = 520, H = 220, midX = W / 2;
-
-  // left: bundle of flat lines + a few rising
-  const flat = fig.onPaper.flat, rising = fig.onPaper.rising;
-  const leftLines = [];
-  for (let i = 0; i < flat; i++) {
-    const y = 40 + (i / Math.max(1, flat - 1)) * 120 * 0.7 + 20;
-    leftLines.push(<line key={'f' + i} x1={24} y1={y} x2={midX - 30} y2={y - 4} stroke={palette.muted} strokeWidth={1.4} opacity={0.4} />);
-  }
-  for (let i = 0; i < rising; i++) {
-    const y = 150 - i * 8;
-    leftLines.push(<line key={'r' + i} x1={24} y1={y} x2={midX - 30} y2={y - 40} stroke={palette.navy} strokeWidth={1.8} opacity={0.8} />);
-  }
-
-  const pk = fig.inPractice.find((d) => d.key === 'pko');
-  const icj = fig.inPractice.find((d) => d.key === 'icj');
+// Arg 4 — two panels, both drawn from the real world series rather than the
+// decorative lines this chart used to carry: what states sign up to on one
+// side, what they actually put in the field on the other. The first panel is a
+// bundle (thirteen participation measures, all high and rising, with their
+// average picked out); the second is the single line that collapses.
+function Panel({ panel, width, accent }) {
+  const H = 250, m = { top: 16, right: 58, bottom: 28, left: 40 };
+  const w = Math.max(width, 250), iw = w - m.left - m.right, ih = H - m.top - m.bottom;
+  const pts = panel.series.flatMap((s) => s.values);
+  const xs = pts.map((p) => p[0]);
+  const ys = pts.map((p) => p[1]);
+  const x = scaleLinear().domain([Math.min(...xs), Math.max(...xs)]).range([m.left, m.left + iw]);
+  const y = scaleLinear()
+    .domain(panel.domain || [0, Math.max(...ys) * 1.08]).nice()
+    .range([m.top + ih, m.top]);
+  const g = d3line().x((d) => x(d[0])).y((d) => y(d[1]));
+  const bundle = panel.series.length > 1;
 
   return (
-    <div className="chart">
-      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Rules on paper vs in practice" style={{ maxWidth: 560, margin: '0 auto' }}>
-        {/* divider */}
-        <line x1={midX} y1={16} x2={midX} y2={H - 30} stroke={palette.line} strokeDasharray="3 4" />
-        {/* left */}
-        <text x={24} y={26} className="end-label" fill={palette.ink}>On paper</text>
-        {leftLines}
-        <text x={24} y={H - 10} className="annot" fill={palette.muted}>{rising} rising · {flat} flat · {fig.onPaper.declining} declining</text>
-        {/* right: steep decline */}
-        <text x={midX + 24} y={26} className="end-label" fill={palette.ink}>In practice</text>
-        <polyline points={`${midX + 30},60 ${W - 30},150`} fill="none" stroke={palette.power} strokeWidth={2.6} />
-        <circle cx={W - 30} cy={150} r={3.5} fill={palette.power} />
-        <text x={W - 30} y={168} textAnchor="end" className="end-label" fill={palette.power}>{pk ? `${pk.label} ${pk.change}%` : ''}</text>
-        {icj && <text x={midX + 24} y={H - 10} className="annot" fill={palette.muted}>{icj.label} ~{icj.level}%</text>}
+    <figure className="twospeed-panel">
+      <figcaption>
+        <b>{panel.label}</b>
+        <span>{panel.sub}</span>
+      </figcaption>
+
+      <svg viewBox={`0 0 ${w} ${H}`} role="img" aria-label={panel.label}>
+        <g className="grid">
+          {y.ticks(4).map((t) => (
+            <line key={t} x1={m.left} x2={m.left + iw} y1={y(t)} y2={y(t)} />
+          ))}
+        </g>
+
+        {panel.series.map((s) => (
+          <g key={s.key}>
+            <path d={g(s.values)} fill="none"
+                  stroke={s.highlight ? accent : palette.navy}
+                  strokeWidth={s.highlight ? 2.8 : bundle ? 1.2 : 2.4}
+                  opacity={s.highlight ? 1 : bundle ? 0.32 : 1} />
+            {!bundle && (() => {
+              const c = s.highlight ? accent : palette.navy;
+              const last = s.values[s.values.length - 1];
+              return (
+                <>
+                  <circle cx={x(last[0])} cy={y(last[1])} r={4} fill={c} />
+                  <text className="end-label" x={x(last[0]) + 7} y={y(last[1])} dy="0.32em"
+                        fill={c}>{last[1]}</text>
+                </>
+              );
+            })()}
+          </g>
+        ))}
+
+        {panel.mean && (
+          <g>
+            <path d={g(panel.mean.values)} fill="none" stroke={palette.navy} strokeWidth={3} />
+            <circle cx={x(panel.mean.values[panel.mean.values.length - 1][0])}
+                    cy={y(panel.mean.values[panel.mean.values.length - 1][1])} r={4}
+                    fill={palette.navy} />
+            <text className="end-label" x={x(panel.mean.values[panel.mean.values.length - 1][0]) + 7}
+                  y={y(panel.mean.values[panel.mean.values.length - 1][1])} dy="0.32em"
+                  fill={palette.navy}>
+              {panel.mean.values[panel.mean.values.length - 1][1]}
+            </text>
+          </g>
+        )}
+
+        <g className="axis">
+          {y.ticks(4).map((t) => (
+            <text key={t} x={m.left - 8} y={y(t)} dy="0.32em" textAnchor="end">{t}</text>
+          ))}
+          {x.ticks(Math.min(5, new Set(xs).size)).map((t) => (
+            <text key={t} x={x(t)} y={m.top + ih + 18} textAnchor="middle">{t}</text>
+          ))}
+          <line x1={m.left} x2={m.left + iw} y1={m.top + ih} y2={m.top + ih} />
+        </g>
       </svg>
+
+      <div className="twospeed-stats">
+        {panel.stats.map((st) => (
+          <div key={st.label}>
+            <strong style={{ color: st.tone === 'down' ? accent : palette.navy }}>{st.value}</strong>
+            <span>{st.label}</span>
+          </div>
+        ))}
+      </div>
+    </figure>
+  );
+}
+
+export default function TwoSpeed({ fig, accent = palette.power }) {
+  const [ref, { width }] = useResizeObserver();
+  if (!fig?.panels?.length) {
+    return <div className="chart"><div className="chart-empty">Data unavailable.</div></div>;
+  }
+  const panelW = Math.min(Math.max((width - 26) / 2, 250), 470);
+  return (
+    <div className="chart" ref={ref}>
+      <div className="twospeed-grid">
+        {fig.panels.map((p) => (
+          <Panel key={p.key} panel={p} width={panelW} accent={accent} />
+        ))}
+      </div>
     </div>
   );
 }
