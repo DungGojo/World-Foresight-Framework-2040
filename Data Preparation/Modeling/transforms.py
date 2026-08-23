@@ -2,8 +2,9 @@
 Target transforms and inverse transforms.
 
 Bounded proxies are modelled on a logit scale so forecasts can be safely
-converted back into valid ranges. Semi-bounded proxies use one-sided log
-transforms so forecasts respect the configured lower or upper bound.
+converted back into valid ranges. Unbounded proxies stay on their original
+scale; ``allow_negative`` independently controls whether final values may fall
+below zero.
 """
 
 import numpy as np
@@ -15,14 +16,6 @@ EPS = 1e-6
 
 def _has_finite_bounds(row) -> bool:
     return pd.notna(row.get("lower_bound")) and pd.notna(row.get("upper_bound"))
-
-
-def _has_lower_bound(row) -> bool:
-    return pd.notna(row.get("lower_bound"))
-
-
-def _has_upper_bound(row) -> bool:
-    return pd.notna(row.get("upper_bound"))
 
 
 def transform_value(value: float, row) -> float:
@@ -40,14 +33,6 @@ def transform_value(value: float, row) -> float:
         scaled = (clipped - lower) / width
         return float(np.log(scaled / (1 - scaled)))
 
-    if proxy_type == "SEM_BOUNDED" and _has_lower_bound(row):
-        shifted = max(float(value) - float(lower), 0.0)
-        return float(np.log1p(shifted))
-
-    if proxy_type == "SEM_BOUNDED" and _has_upper_bound(row):
-        shifted = max(float(upper) - float(value), 0.0)
-        return float(-np.log1p(shifted))
-
     return float(value)
 
 
@@ -64,10 +49,6 @@ def inverse_transform_value(transformed_value: float, row) -> float:
         width = upper - lower
         scaled = 1 / (1 + np.exp(-float(transformed_value)))
         value = lower + width * scaled
-    elif proxy_type == "SEM_BOUNDED" and _has_lower_bound(row):
-        value = float(lower) + np.expm1(float(transformed_value))
-    elif proxy_type == "SEM_BOUNDED" and _has_upper_bound(row):
-        value = float(upper) - np.expm1(-float(transformed_value))
     else:
         value = float(transformed_value)
 

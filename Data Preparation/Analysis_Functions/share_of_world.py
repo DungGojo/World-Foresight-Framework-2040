@@ -115,3 +115,54 @@ def analyze_share_of_world(
         hhi_df,
         share_detail_df.reset_index(drop=True),
     )
+
+
+def _year_slice(full_data: pd.DataFrame, year: int, scenario: str) -> pd.DataFrame:
+    scenarios = ["historical", scenario] if year <= 2025 else [scenario]
+    return full_data[
+        (full_data["year"] == year) & (full_data["scenario"].isin(scenarios))
+    ]
+
+
+def share_trajectory(
+    full_data: pd.DataFrame,
+    proxy_ids: list[str],
+    years,
+    scenario: str = "main_scenario",
+) -> pd.DataFrame:
+    """Each market's average world share at every requested year (wide: market x year)."""
+    frames = {}
+    for year in years:
+        ranking, _, _ = analyze_share_of_world(_year_slice(full_data, year, scenario), proxy_ids)
+        frames[year] = ranking.set_index("market")["average_share"]
+    out = pd.DataFrame(frames)
+    return out.sort_values(list(years)[-1], ascending=False).round(2)
+
+
+def concentration_trend(
+    full_data: pd.DataFrame,
+    proxy_ids: list[str],
+    years,
+    scenario: str = "main_scenario",
+) -> pd.DataFrame:
+    """Is power/output concentrating or diffusing? HHI, effective N and top-k shares by year.
+
+    `effective_markets` is 10000/HHI — the number of equal-sized markets the
+    observed distribution is equivalent to.
+    """
+    traj = share_trajectory(full_data, proxy_ids, years, scenario=scenario)
+    rows = []
+    for year in years:
+        s = traj[year].dropna().sort_values(ascending=False)
+        hhi = float(np.square(s).sum())
+        rows.append(
+            {
+                "year": year,
+                "hhi": round(hhi, 1),
+                "effective_markets": round(10000 / hhi, 2) if hhi > EPS else np.nan,
+                "top2_share": round(float(s.iloc[:2].sum()), 1),
+                "rank3_10_share": round(float(s.iloc[2:10].sum()), 1),
+                "rank11plus_share": round(float(s.iloc[10:].sum()), 1),
+            }
+        )
+    return pd.DataFrame(rows)

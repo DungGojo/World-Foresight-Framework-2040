@@ -15,7 +15,7 @@ where
     damped_steps  = phi * (1 - phi**h) / (1 - phi)   ->  phi / (1 - phi) as h grows
     phi           = per-series damping from uncertainty_level
 
-Three guardrails keep long-horizon paths realistic:
+Two guardrails keep long-horizon paths realistic:
 
 1. Damping (`damped_steps`) makes the cumulative trend converge to a finite level
    instead of running to +/- infinity, so bounded proxies no longer collapse onto
@@ -23,11 +23,6 @@ Three guardrails keep long-horizon paths realistic:
 2. Drift cap: the total move in y is limited to DRIFT_SPAN_MULT times the series'
    own observed y-range, so a series never travels far outside what it has ever
    historically done.
-3. Sanity ceiling for one-sided-below proxies (SEM_BOUNDED with a lower bound,
-   e.g. military %GDP, peacekeepers): because the log transform turns a linear
-   rise in y into exponential growth in value, the forecast value is capped at
-   GROWTH_CAP times the historical peak. This stops absurd blow-ups (e.g. a
-   country's peacekeeper count exceeding the entire global total).
 
 Local slope  : weighted OLS slope of y over time (shock years down-weighted).
 Pooled slope : median local slope of the same proxy family (`id`). This avoids
@@ -50,7 +45,6 @@ DEFAULT_DAMPING = 0.80
 
 SLOPE_CLIP_VOL_MULT = 3.0    # annual step <= 3x the series' yearly-change volatility
 DRIFT_SPAN_MULT = 2.0        # total y move <= 2x the observed y-range
-GROWTH_CAP = 2.5             # SEM_BOUNDED-below value <= 2.5x historical peak
 MIN_Y_SPAN = 1e-6
 LOCAL_SLOPE_MIN_OBS = 10
 LOCAL_SLOPE_MIN_R2_RAW = 0.60
@@ -145,7 +139,6 @@ def _series_table(modeling_df: pd.DataFrame, diagnostics: pd.DataFrame) -> pd.Da
             continue
         years = g["year"].to_numpy(dtype=float)
         y = g["y"].to_numpy(dtype=float)
-        values = g["value"].to_numpy(dtype=float)
         weights = g.get("sample_weight", pd.Series(1.0, index=g.index)).to_numpy(dtype=float)
 
         local_slope = _weighted_slope(years, y, weights)
@@ -173,23 +166,13 @@ def _series_table(modeling_df: pd.DataFrame, diagnostics: pd.DataFrame) -> pd.Da
         y_span = float(np.ptp(y)) if n >= 2 else 0.0
         max_drift = DRIFT_SPAN_MULT * max(y_span, MIN_Y_SPAN)
 
-        # Sanity ceiling on y for one-sided-below proxies (log transform explodes).
-        proxy_type = g["proxy_type"].iloc[0]
-        lower_bound = g["lower_bound"].iloc[0]
-        upper_bound = g["upper_bound"].iloc[0]
-        y_ceiling = np.inf
-        if proxy_type == "SEM_BOUNDED" and pd.notna(lower_bound) and pd.isna(upper_bound):
-            hist_peak = float(np.nanmax(values))
-            headroom = max(hist_peak - float(lower_bound), 0.0)
-            y_ceiling = float(np.log1p(GROWTH_CAP * headroom)) if headroom > 0 else np.inf
-
         rows.append({
             "proxy_id": proxy_id, "last_year": int(years[-1]), "last_y": float(y[-1]),
             "n_obs": n, "local_slope": local_slope, "pooled_slope": p_slope,
             "pooled_slope_source": pooled_slope_source,
             "credibility": float(credibility), "blended_slope": blended, "phi": phi,
             "effective_years": _damped_steps(10_000, phi),
-            "max_drift": max_drift, "y_ceiling": y_ceiling,
+            "max_drift": max_drift,
         })
     return pd.DataFrame(rows).set_index("proxy_id")
 
@@ -210,7 +193,7 @@ def forecast_transformed(modeling_df, diagnostics, future_years) -> pd.DataFrame
                 continue
             drift = row["blended_slope"] * _damped_steps(horizon, row["phi"])
             drift = float(np.clip(drift, -row["max_drift"], row["max_drift"]))
-            yhat = min(row["last_y"] + drift, row["y_ceiling"])
+            yhat = row["last_y"] + drift
             records.append({"proxy_id": proxy_id, "year": year, "yhat": float(yhat)})
     return pd.DataFrame(records)
 
@@ -221,5 +204,5 @@ def model_components(modeling_df, diagnostics) -> pd.DataFrame:
     return table[[
         "proxy_id", "n_obs", "last_y", "local_slope", "pooled_slope",
         "pooled_slope_source", "credibility", "blended_slope", "phi",
-        "effective_years", "max_drift", "y_ceiling",
+        "effective_years", "max_drift",
     ]]

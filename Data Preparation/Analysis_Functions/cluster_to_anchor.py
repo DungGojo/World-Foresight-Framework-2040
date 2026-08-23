@@ -40,6 +40,71 @@ def _prepare(forecast_df: pd.DataFrame) -> pd.DataFrame:
     df["value"] = pd.to_numeric(df["value"], errors="coerce")
     return df.dropna(subset=["id", "market", "value"])
 
+def alignment_tilt(
+    forecast_df: pd.DataFrame,
+    domains: dict | None = None,
+    align_threshold: float = 0.35,
+    hedge_threshold: float = 0.60,
+    exclude_markets=("USA", "CHN", "GLO"),
+) -> pd.DataFrame:
+    """Per-market tilt and hedging balance across two-sided domains.
+
+    For each domain (a West-side, East-side proxy pair):
+        tilt    = (west - east) / (west + east)      -1 = fully East ... +1 = fully West
+        balance =  2 * min / (west + east)            0 = one-sided ... 1 = evenly split
+
+    Posture combines the composite tilt and balance:
+        Aligned-West / Aligned-East : |tilt| >= align_threshold
+        Hedging                     : near-neutral tilt and balance >= hedge_threshold
+        Autonomous                  : near-neutral tilt and low balance (engages neither)
+
+    `issue_split` flags markets whose domains point in opposite directions —
+    the countries that are literally aligned one way on security and the other
+    way on money.
+    """
+    if domains is None:
+        domains = {"votes": ("D8_1", "D8_2"), "trade": ("D9_1", "D9_2")}
+
+    needed = {pid for pair in domains.values() for pid in pair}
+    df = _prepare(forecast_df)
+    wide = df[df["id"].isin(needed)].pivot_table(
+        index="market", columns="id", values="value", aggfunc="mean"
+    )
+
+    out = pd.DataFrame(index=wide.index)
+    for name, (west_id, east_id) in domains.items():
+        if west_id not in wide.columns or east_id not in wide.columns:
+            warnings.warn(f"alignment_tilt: domain '{name}' missing a side; skipped", stacklevel=2)
+            continue
+        west, east = wide[west_id], wide[east_id]
+        total = west + east
+        out[f"{name}_tilt"] = np.where(total.abs() > EPS, (west - east) / total, np.nan)
+        out[f"{name}_balance"] = np.where(
+            total.abs() > EPS, 2 * np.minimum(west, east) / total, np.nan
+        )
+
+    tilt_cols = [c for c in out.columns if c.endswith("_tilt")]
+    bal_cols = [c for c in out.columns if c.endswith("_balance")]
+    out["tilt"] = out[tilt_cols].mean(axis=1)
+    out["balance"] = out[bal_cols].mean(axis=1)
+    out["issue_split"] = out[tilt_cols].apply(
+        lambda r: bool(np.nanmin(np.sign(r)) != np.nanmax(np.sign(r))), axis=1
+    )
+
+    def _posture(row):
+        if pd.isna(row["tilt"]):
+            return "n/a"
+        if row["tilt"] >= align_threshold:
+            return "Aligned-West"
+        if row["tilt"] <= -align_threshold:
+            return "Aligned-East"
+        return "Hedging" if row["balance"] >= hedge_threshold else "Autonomous"
+
+    out["posture"] = out.apply(_posture, axis=1)
+    out = out.drop(index=[m for m in exclude_markets if m in out.index], errors="ignore")
+    return out.round(3).sort_values("tilt", ascending=False).reset_index()
+
+
 def cluster_to_anchor(
     forecast_df: pd.DataFrame,
     anchors: dict | None = None,

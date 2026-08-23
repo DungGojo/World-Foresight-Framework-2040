@@ -37,8 +37,9 @@ long-horizon (2040) forecasts realistic and every number explainable.
 
 ## 3. Proxy Types and Transform Logic
 
-Transforms keep forecasts inside valid ranges. Allowed types: `BOUNDED`,
-`SEM_BOUNDED`, `UNBOUNDED`. Allowed shock policies: `IGNORE`, `DOWNWEIGHT`.
+Transforms keep forecasts inside valid ranges. Allowed proxy types are only
+`BOUNDED` and `UNBOUNDED`. `allow_negative` is an independent Boolean control.
+Allowed shock policies: `IGNORE`, `DOWNWEIGHT`.
 
 ### BOUNDED (both bounds, e.g. a 0–100 score)
 ```text
@@ -48,19 +49,14 @@ y      = log(scaled / (1 - scaled))            # logit
 inverse: value = lower + width / (1 + exp(-yhat))
 ```
 
-### SEM_BOUNDED (one bound, e.g. a non-negative %GDP)
-```text
-lower bound: y = log1p(value - lower);   value = lower + expm1(yhat)
-upper bound: y = -log1p(upper - value);  value = upper - expm1(-yhat)
-```
-
 ### UNBOUNDED
 ```text
 y = value;   value = yhat
 ```
 
-Final values are always capped by `lower_bound`, `upper_bound`, and
-`allow_negative`.
+`BOUNDED` requires both a lower and an upper bound. `UNBOUNDED` must leave both
+bounds blank. Final negative values are permitted only when `allow_negative`
+is `TRUE`; otherwise they are floored at zero.
 
 ## 4. Minimum Data & Shock Years
 
