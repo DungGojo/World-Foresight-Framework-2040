@@ -88,7 +88,7 @@ window.WFF_CONTENT =
   "intro": {
     "kicker": "World Foresight Framework",
     "headline": "How will the world look in 2040?",
-    "subhead": "Not a prediction — a structured, data-driven look at the five forces shaping our future, and where the evidence says they are heading.",
+    "subhead": "This is not a prediction. It is a structured, data-driven look at the five forces shaping our future and where the evidence says they are heading.",
     "beginLabel": "Begin the story",
     "skipLabel": "Skip intro"
   },
@@ -108,15 +108,15 @@ window.WFF_CONTENT =
         "dur": 2600
       },
       {
-        "label": "Chapter One · The world converges — 1000 to 1900",
+        "label": "Chapter One · The world converges, 1000 to 1900",
         "dur": 4200
       },
       {
-        "label": "Chapter Two · The great acceleration — 1900 to 2000",
+        "label": "Chapter Two · The great acceleration, 1900 to 2000",
         "dur": 4200
       },
       {
-        "label": "Chapter Three · The world we inherit — 2000 to 2025",
+        "label": "Chapter Three · The world we inherit, 2000 to 2025",
         "dur": 4400
       },
       {
@@ -171,7 +171,7 @@ window.WFF_CONTENT =
         "chapter": 0,
         "yr": "300,000 years ago",
         "title": "We arrive",
-        "cap": "Homo sapiens appears — curious, social, restless.",
+        "cap": "Homo sapiens appears: curious, social and restless.",
         "motif": "spark",
         "c1": "#1c1408",
         "c2": "#5c4420",
@@ -262,7 +262,7 @@ window.WFF_CONTENT =
         "chapter": 2,
         "yr": "1502",
         "title": "Worlds collide",
-        "cap": "Ocean empires redraw the map — conquest, commerce, and the first global economy.",
+        "cap": "Ocean empires redraw the map through conquest, commerce and the first global economy.",
         "motif": "map",
         "c1": "#0d1a24",
         "c2": "#2e5a7a",
@@ -280,7 +280,7 @@ window.WFF_CONTENT =
         "chapter": 2,
         "yr": "1687",
         "title": "Science rewrites the rules",
-        "cap": "Newton shows the universe runs on laws we can discover — and use.",
+        "cap": "Newton shows that the universe runs on laws we can discover and use.",
         "motif": "flask",
         "c1": "#141414",
         "c2": "#4a4438",
@@ -298,7 +298,7 @@ window.WFF_CONTENT =
         "chapter": 2,
         "yr": "1760s",
         "title": "The engine age",
-        "cap": "Steam, coal, and iron accelerate everything — and begin rewriting the atmosphere.",
+        "cap": "Steam, coal and iron accelerate everything and begin rewriting the atmosphere.",
         "motif": "gear",
         "c1": "#161616",
         "c2": "#4a4a4a",
@@ -387,7 +387,7 @@ window.WFF_CONTENT =
         "chapter": 3,
         "yr": "1945",
         "title": "The atomic age",
-        "cap": "We split the atom — a new scale of power, and of peril.",
+        "cap": "We split the atom and unlock a new scale of power and peril.",
         "motif": "atom",
         "c1": "#1c0a0a",
         "c2": "#7a1f1f",
@@ -422,7 +422,7 @@ window.WFF_CONTENT =
         "chapter": 3,
         "yr": "1969",
         "title": "We leave Earth",
-        "cap": "For the first time, we see our home from the outside — one small blue world.",
+        "cap": "For the first time, we see our home from the outside as one small blue world.",
         "motif": "moon",
         "c1": "#050814",
         "c2": "#1a2b6b",
@@ -525,7 +525,7 @@ window.WFF_CONTENT =
         "chapter": 4,
         "yr": "2020",
         "title": "A shared shock",
-        "cap": "A virus stops the world in weeks — proof of how tightly our fates are wired together.",
+        "cap": "A virus stops the world in weeks, revealing how tightly our fates are connected.",
         "motif": "mask",
         "c1": "#0e1216",
         "c2": "#37454f",
@@ -543,7 +543,7 @@ window.WFF_CONTENT =
         "chapter": 4,
         "yr": "The 2020s",
         "title": "Machines that think",
-        "cap": "AI begins to reason, write, and create alongside us — and starts reshaping work itself.",
+        "cap": "AI begins to reason, write and create alongside us, reshaping work itself.",
         "motif": "ai",
         "c1": "#0a1424",
         "c2": "#2b4a8c",
@@ -576,8 +576,8 @@ window.WFF_CONTENT =
       {
         "chapter": 4,
         "yr": "2025",
-        "title": "Now — five forces in motion",
-        "cap": "Eight billion people. One wired, warming, restless world — and the story so far was written by five forces.",
+        "title": "Now, five forces are in motion",
+        "cap": "Eight billion people share one wired, warming and restless world. Five forces have written the story so far.",
         "motif": "earth",
         "c1": "#0d1420",
         "c2": "#2e3d5e",
@@ -599,7 +599,7 @@ window.WFF_CONTENT =
         "chapter": 5,
         "yr": "2025 → 2040",
         "title": "What will the world look like in 2040?",
-        "cap": "…and how will the way we live, work, move, and belong change with it? Five forces hold the answer — and this project follows the data to find it.",
+        "cap": "How will the way we live, work, move and belong change with it? Five forces hold the answer, and this project follows the data to find it.",
         "motif": "q",
         "c1": "#0d1420",
         "c2": "#2e3d5e",
@@ -624,7 +624,7 @@ window.WFF_CONTENT =
     "brandSub": "The 5 forces of 2040",
     "yearBadge": "2040",
     "leadTitle": "Five forces will shape the next fifteen years.",
-    "leadSub": "Select a force to preview it — or drag two together to see how they combine.",
+    "leadSub": "Select a force to preview it, or drag two together to see how they combine.",
     "dragHint": "Drag one force toward another",
     "replayLabel": "↺ Replay the story"
   },
@@ -634,35 +634,35 @@ window.WFF_CONTENT =
       "name": "Power",
       "color": "#9e2b25",
       "status": "coming_soon",
-      "teaser": "Who sets the rules and who holds the leverage — geopolitics, alliances, and whether the world cooperates or fragments."
+      "teaser": "Who sets the rules and holds the leverage? This force looks at geopolitics, alliances and whether the world cooperates or fragments."
     },
     {
       "id": "tech",
       "name": "Technology",
       "color": "#3b4e8c",
       "status": "coming_soon",
-      "teaser": "Whether innovation enriches, divides, or destabilizes — AI, labour markets, productivity, and inequality."
+      "teaser": "Will innovation enrich, divide or destabilize society? This force looks at AI, labour markets, productivity and inequality."
     },
     {
       "id": "planet",
       "name": "Planet",
       "color": "#2e7d6b",
       "status": "coming_soon",
-      "teaser": "Whether we can adapt before planetary boundaries break — climate, food, water, energy, and livability."
+      "teaser": "Can we adapt before planetary boundaries break? This force looks at climate, food, water, energy and livability."
     },
     {
       "id": "people",
       "name": "People",
       "color": "#b07a34",
       "status": "coming_soon",
-      "teaser": "Who moves, who ages, who concentrates, and who pushes back — demographics, migration, and unrest."
+      "teaser": "Who moves, who ages, who gathers in cities and who pushes back? This force looks at demographics, migration and unrest."
     },
     {
       "id": "economy",
       "name": "Economy",
       "color": "#4a5d73",
       "status": "coming_soon",
-      "teaser": "Whether the global economy integrates, fractures, or rewires — trade blocs, supply chains, and resilience."
+      "teaser": "Will the global economy integrate, fracture or rewire itself? This force looks at trade blocs, supply chains and resilience."
     }
   ],
   "combos": {
@@ -681,9 +681,9 @@ window.WFF_CONTENT =
   "insightsBar": {
     "label": "Insights",
     "singleTag": "Force",
-    "singleSoon": "Full topic — coming soon",
+    "singleSoon": "Full topic coming soon",
     "comboTeaser": "How your daily life shifts when these two forces move together.",
-    "comboSoon": "Combined insight — coming soon",
+    "comboSoon": "Combined insight coming soon",
     "closeLabel": "Close"
   }
 };

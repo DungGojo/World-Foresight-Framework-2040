@@ -45,6 +45,20 @@ const hasDataFor = (data, proxyId, marketCode) => {
   )));
 };
 
+// Switching indicator drops any selected country the new indicator has no data
+// for, which can empty the selection entirely and leave the reader staring at a
+// blank chart with no hint of what to click. Land on something readable
+// instead: the world aggregate where the indicator carries one, then the
+// largest economies, then whatever it does cover.
+const PREFERRED_MARKETS = ['GLO', 'USA', 'CHN', 'RUS'];
+
+const pickDefaultMarkets = (data, proxyId) => {
+  const preferred = PREFERRED_MARKETS.find((code) => hasDataFor(data, proxyId, code));
+  if (preferred) return [preferred];
+  const covered = (data?.markets || []).find((market) => hasDataFor(data, proxyId, market.code));
+  return covered ? [covered.code] : [];
+};
+
 export default function Level3Explorer({
   mode = 'full',
   topic = 'power',
@@ -54,14 +68,25 @@ export default function Level3Explorer({
   initialTo = 2040,
   onOpenFull,
 }) {
-  const [, setParams] = useSearchParams();
-  const [proxy, setProxy] = useState(initialProxy);
-  const [markets, setMarkets] = useState(initialMarkets);
+  const compact = mode === 'compact';
+  const [searchParams, setParams] = useSearchParams();
+  // Seed from the URL on first render (only when it's the one being kept in
+  // sync — a compact/embedded explorer shares the page's URL with something
+  // else) so a reload lands back on the indicator/countries it left off on
+  // instead of silently resetting to the defaults.
+  const [proxy, setProxy] = useState(() => (
+    compact ? initialProxy : (searchParams.get('proxy') || initialProxy)
+  ));
+  const [markets, setMarkets] = useState(() => {
+    if (compact) return initialMarkets;
+    const raw = searchParams.get('markets');
+    if (raw === null) return initialMarkets;
+    return raw.split(',').filter(Boolean);
+  });
   const [q, setQ] = useState('');
   const [view, setView] = useState('chart');
   const [chartView, setChartView] = useState('interval');
   const scenario = 'main_scenario';
-  const compact = mode === 'compact';
 
   // `topic='all'` searches every indicator through the small catalog and pulls
   // the owning topic's series file only once an indicator is chosen — so the
@@ -73,11 +98,14 @@ export default function Level3Explorer({
     : topic;
   const loaded = useTimeseries(owningTopic);
   const data = useMemo(() => {
-    if (!loaded) return null;
     if (!searchAll) return loaded;
-    // The catalog supplies the full indicator and market lists; the series come
-    // from whichever topic file is currently in memory.
-    return { ...loaded, proxies: catalogProxies, markets: catalog.markets };
+    // The catalog supplies the full indicator and market lists up front, so the
+    // search box, indicator list and country picker stay live and clickable
+    // even while the owning topic's series file is still in flight — only the
+    // chart itself (which needs `series`) has to wait. Switching proxies
+    // quickly across topics would otherwise blank out the entire picker on
+    // every switch and silently drop clicks made while it was gone.
+    return { ...(loaded || {}), proxies: catalogProxies, markets: catalog.markets };
   }, [loaded, searchAll, catalogProxies]);
 
   // Each timeseries file is already scoped to one topic by build_data.py
@@ -90,15 +118,6 @@ export default function Level3Explorer({
     }
   }, [availableProxies, proxy]);
 
-  const seriesLoaded = Boolean(data?.series?.[proxy]);
-  useEffect(() => {
-    if (!seriesLoaded) return;
-    setMarkets((current) => {
-      const next = current.filter((market) => hasDataFor(data, proxy, market));
-      return next.length === current.length ? current : next;
-    });
-  }, [data, proxy, seriesLoaded]);
-
   const syncURL = (next) => {
     if (compact) return;
     const params = new URLSearchParams();
@@ -106,6 +125,30 @@ export default function Level3Explorer({
     params.set('markets', (next.markets ?? markets).join(','));
     setParams(params, { replace: true });
   };
+
+  const seriesLoaded = Boolean(data?.series?.[proxy]);
+  useEffect(() => {
+    if (!seriesLoaded) return;
+    const next = markets.filter((market) => hasDataFor(data, proxy, market));
+    if (next.length === markets.length) return;
+    // A proxy picked while its topic file was still loading (so changeProxy
+    // couldn't check it yet) lands here once it arrives. If none of the
+    // previously-selected countries survive, fall back rather than leaving
+    // the chart with an empty selection — but only when there *was* a
+    // selection; an explicit "Clear all" should stay cleared.
+    let resolved = next;
+    if (next.length === 0 && markets.length > 0) {
+      const fallback = pickDefaultMarkets(data, proxy);
+      if (fallback.length) resolved = fallback;
+    }
+    setMarkets(resolved);
+    syncURL({ markets: resolved });
+    // `markets` is intentionally a dep — it's how a resolved value gets
+    // re-checked (and found already-stable) on the next render, converging
+    // in one extra pass rather than looping. `syncURL`/`compact` close over
+    // per-render values that don't need to retrigger this check themselves.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, proxy, seriesLoaded, markets]);
 
   const filteredProxies = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -119,13 +162,31 @@ export default function Level3Explorer({
 
   const proxyMeta = data.proxies.find((item) => item.id === proxy) || availableProxies[0] || {};
   const marketHasData = (proxyId, marketCode) => hasDataFor(data, proxyId, marketCode);
+  // Flex the chart's start year to whichever selected country has the
+  // earliest observation for this indicator, instead of pinning every chart
+  // to `initialFrom` (2000) — most indicators don't have full history back
+  // that far for every market, and pinning it just wastes the left side of
+  // the chart on a flat/empty run for markets that start later.
+  const proxySeries = data.series?.[proxy];
+  const dataStartYears = markets
+    .map((market) => proxySeries?.[market]?.historical?.[0]?.[0])
+    .filter((year) => year != null);
+  const chartFrom = dataStartYears.length ? Math.min(...dataStartYears) : initialFrom;
   const changeProxy = (nextProxy) => {
     // Keep the current countries if the new indicator lives in a topic whose
     // series file has not arrived yet; the effect above prunes once it has.
     const known = Boolean(data.series?.[nextProxy]);
-    const nextMarkets = known
+    let nextMarkets = known
       ? markets.filter((market) => marketHasData(nextProxy, market))
       : markets;
+    // Don't leave the chart with nothing selected just because none of the
+    // previously-chosen countries carry this indicator (e.g. switching from a
+    // trade proxy to one only Global/USA report) — land on a sensible default
+    // instead of a blank "select a country" chart. An explicit "Clear all"
+    // (markets already empty before the switch) is left alone.
+    if (known && markets.length > 0 && nextMarkets.length === 0) {
+      nextMarkets = pickDefaultMarkets(data, nextProxy);
+    }
     setProxy(nextProxy);
     setMarkets(nextMarkets);
     syncURL({ proxy: nextProxy, markets: nextMarkets });
@@ -137,13 +198,17 @@ export default function Level3Explorer({
   };
 
   // Regions only offer the countries that (a) exist in this dataset and (b) have
-  // data for the current indicator.
+  // data for the current indicator — except while that indicator's own series
+  // file is still loading, when there is nothing to check yet: filtering on it
+  // then would empty out the whole country picker for a moment on every switch
+  // into a not-yet-loaded topic, rather than just leaving the chart to show its
+  // own loading state.
   const regionGroups = REGIONS.map((region) => ({
     name: region.name,
     markets: region.codes
       .map((code) => data.markets.find((m) => m.code === code))
       .filter(Boolean)
-      .filter((m) => marketHasData(proxy, m.code)),
+      .filter((m) => !seriesLoaded || marketHasData(proxy, m.code)),
   })).filter((region) => region.markets.length > 0);
 
   const toggleRegion = (region) => {
@@ -192,19 +257,27 @@ export default function Level3Explorer({
           <span className="l3-chart-unit">{proxyMeta.unit || 'Value'}</span>
         </div>
       </div>
-      <FanChart
-        series={data}
-        proxy={proxy}
-        markets={markets}
-        scenario={scenario}
-        scenarioLabel={SCENARIO_LABEL}
-        mode={activeChartView}
-        yLabel={proxyMeta.unit}
-        from={initialFrom}
-        to={initialTo}
-        height={compact ? 250 : 410}
-        statistics={statistics}
-      />
+      {seriesLoaded ? (
+        <FanChart
+          series={data}
+          proxy={proxy}
+          markets={markets}
+          scenario={scenario}
+          scenarioLabel={SCENARIO_LABEL}
+          mode={activeChartView}
+          yLabel={proxyMeta.unit}
+          from={chartFrom}
+          to={initialTo}
+          height={compact ? 250 : 410}
+          statistics={statistics}
+        />
+      ) : (
+        // The indicator's own topic file is still in flight (a fresh switch
+        // into a topic not loaded yet this session) — distinct from FanChart's
+        // "no data for this selection" message, which would otherwise flash
+        // here for a moment and read as a dead end rather than a pending load.
+        <div className="chart"><div className="chart-empty">Loading chart…</div></div>
+      )}
       {proxyMeta.description ? <p className="l3-desc">{proxyMeta.description}</p> : null}
     </div>
   );

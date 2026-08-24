@@ -30,6 +30,7 @@ const compactFormat = (value) => {
   return Number(value).toLocaleString('en-US', { maximumFractionDigits: digits });
 };
 const percentFormat = (value) => (value == null || value === '' ? '—' : `${(Number(value) * 100).toFixed(1)}%`);
+const valueFormat = (value) => (value == null ? 'N/A' : exactFormat(value));
 
 // Push end labels apart when their y positions collide. Three scenario paths
 // (and several countries) routinely land within a few pixels of each other.
@@ -187,10 +188,10 @@ export default function FanChart({
   const reveal = useReveal(`${proxy}|${[...markets].sort().join(',')}`);
 
   if (!markets.length) {
-    return <div className="chart"><div className="chart-empty">Please select a country to explore this indicator.</div></div>;
+    return <div className="chart fan-chart" ref={ref}><div className="chart-empty">Please select a country to explore this indicator.</div></div>;
   }
   if (!proxySeries || !predictionValues.length) {
-    return <div className="chart"><div className="chart-empty">No data is available for this selection.</div></div>;
+    return <div className="chart fan-chart" ref={ref}><div className="chart-empty">No data is available for this selection.</div></div>;
   }
 
   const blend = Math.max(0, Math.min(1, view.blend));
@@ -248,18 +249,18 @@ export default function FanChart({
     );
     const points = activeRows.map((row, index) => {
       if (!row.tooltip.length) return null;
-      const point = row.tooltip.reduce(
-        (best, candidate) => (Math.abs(candidate.year - year) < Math.abs(best.year - year) ? candidate : best),
-        row.tooltip[0]
-      );
-      return point ? {
+      // Only an exact year match counts as data for this market — snapping to
+      // its nearest available year would silently attribute a later (or
+      // earlier) value to a year the market has no observation for.
+      const point = row.tooltip.find((candidate) => candidate.year === year) || null;
+      return {
         market: row.market,
         label: row.label,
-        value: point.value,
-        low: point.low,
-        high: point.high,
+        value: point ? point.value : null,
+        low: point ? point.low : null,
+        high: point ? point.high : null,
         color: row.colorOverride || colorFor(row.market, index),
-      } : null;
+      };
     }).filter(Boolean);
     setHover({ year, points });
   };
@@ -316,7 +317,7 @@ export default function FanChart({
 
   return (
     <div className="chart fan-chart" ref={ref}>
-      <svg viewBox={`0 0 ${w} ${H}`} role="img"
+      <svg viewBox={`0 0 ${w} ${H}`} role="img" style={{ height: H }}
            aria-label={wantScenario ? `Scenario paths for ${proxy}` : `${scenarioLabel} scenario for ${proxy}`}
            onPointerMove={handlePointer} onPointerLeave={() => setHover(null)}>
         <defs>
@@ -385,7 +386,7 @@ export default function FanChart({
           {hover ? (
             <g className="chart-hover" aria-hidden="true">
               <line x1={x(hover.year)} x2={x(hover.year)} y1={margin.top} y2={margin.top + innerHeight} />
-              {hover.points.map((point) => (
+              {hover.points.filter((point) => point.value != null).map((point) => (
                 <circle key={point.label || point.market} cx={x(hover.year)} cy={y(point.value)} r="4" fill={point.color} />
               ))}
             </g>
@@ -407,7 +408,7 @@ export default function FanChart({
               <div className="chart-tooltip-main">
                 <i style={{ background: point.color }} />
                 <span>{point.label || series.markets.find((market) => market.code === point.market)?.name || point.market}</span>
-                <strong>{exactFormat(point.value)}</strong>
+                <strong>{valueFormat(point.value)}</strong>
               </div>
               {!wantScenario && singleCountry && point.low != null && point.high != null ? (
                 <div className="chart-tooltip-range">
