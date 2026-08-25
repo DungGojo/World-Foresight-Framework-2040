@@ -185,25 +185,25 @@ After setup, open the notebooks and select the `World Foresight Framework` kerne
 
 ```text
 Data Preparation/
-  Analysis_Functions/       Analytical tools for trends, shares, scenarios, and typologies
-  Extract_Functions/        Connectors for public data sources
-  Transform_Functions/      Cleaning and reshaping utilities
-  Modeling/                 Forecasting, scenarios, diagnostics, and backtesting
+  Analysis_Functions/               Analytical tools for trends, shares, scenarios, and typologies
+  Extract_Functions/                Connectors for public data sources
+  Transform_Functions/              Cleaning and reshaping utilities
+  Modeling/                         Forecasting, scenarios, diagnostics, and backtesting
   Data Extract + Transform.ipynb
   Data Modeling.ipynb
   Data Analysis.ipynb
 
 Website/
-  app/                      React application and the main website
-    public/                 Images and visual assets
-    scripts/                Data generation scripts
-    src/content/            Topic arguments, findings, and source links
-    src/data/               Generated chart and time series data
-    src/                     React components, pages, charts, and styles
+  app/                              React application and the main website
+    public/                         Images and visual assets
+    scripts/                        Data generation scripts
+    src/content/                    Topic arguments, findings, and source links
+    src/data/                       Generated chart and time series data
+    src/                            React components, pages, charts, and styles
 
-Final Data.xlsx             Research output used to generate website data
-README.md                   Project introduction and setup guide
-LICENSE                     MIT license
+Final Data.xlsx                     Research output used to generate website data
+README.md                           Project introduction and setup guide
+LICENSE                             MIT license
 ```
 
 ### Technology
